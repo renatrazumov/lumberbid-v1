@@ -1,0 +1,26 @@
+# lumber.bid — static holding page.
+#
+# NO BUILD STEP ON PURPOSE. This site exists to activate the Netlify site so
+# lumber.bid's DNS can be moved under Netlify management (and Resend's SPF/DKIM/
+# DMARC records added there). A publish-only site has no npm install, no Node
+# version, and no build command — so it cannot fail to deploy. When the sawmill/
+# lumber vertical actually ships, this becomes a real build (Astro, mirroring
+# wood.delivery) and the holding page is replaced.
+#
+# There are no secrets in this repo and it must stay that way — it is a public
+# client with no backend of its own. NEVER add a Supabase service_role key.
+
+[build]
+  publish = "site"
+
+[[headers]]
+  for = "/*"
+
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # The page is fully self-contained: inline <style>, no scripts, no external
+    # requests. Everything else is denied rather than merely unused.
+    Content-Security-Policy = "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"

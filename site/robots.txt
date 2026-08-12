@@ -1,0 +1,11 @@
+# Deliberately not indexed.
+#
+# This is a holding page, not a product. Indexing it would put thin content in
+# front of searchers looking for a lumber marketplace that does not exist yet,
+# and would compete with timber.bid for the company's own brand terms.
+#
+# Lift this when the sawmill/lumber vertical actually ships and this domain
+# serves something real.
+
+User-agent: *
+Disallow: /

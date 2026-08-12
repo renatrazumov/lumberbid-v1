@@ -1,0 +1,19 @@
+# Secrets — this repo is a public client and must never carry them.
+.env
+.env.*
+!.env.example
+
+# Netlify
+.netlify/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Node (none today — the site has no build step — but keep the guard in place
+# for when this becomes a real Astro build)
+node_modules/
+dist/

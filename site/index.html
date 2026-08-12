@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lumber.bid — a timber.bid domain</title>
+
+<!-- Holding page: not indexed. See robots.txt for why. -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- Says what this domain IS. A domain that sends mail needs a page that
+     identifies it as legitimately ours; a parked page reads as a throwaway. -->
+<meta name="description" content="lumber.bid is an official domain of timber.bid, reserved for the sawmill and lumber vertical. Tree services and firewood are live at timber.bid.">
+<link rel="canonical" href="https://timber.bid/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="lumber.bid — a timber.bid domain">
+<meta property="og:description" content="Reserved for the sawmill and lumber vertical of timber.bid. Not open yet.">
+<meta property="og:url" content="https://lumber.bid/">
+
+<!-- Inline SVG favicon: no external request, so the strict CSP holds. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
+
+<style>
+  /* timber.bid green. Amber is reserved for firewood/money surfaces, so it is
+     deliberately absent here; red is errors only. */
+  :root {
+    --brand: #2E7D32;
+    --bg: #ffffff;
+    --surface: #f6f7f5;
+    --border: #e2e5e0;
+    --text: #16281a;
+    --muted: #5c6b5f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --brand: #6FBF73;
+      --bg: #10140f;
+      --surface: #171d16;
+      --border: #2a332a;
+      --text: #eaf0e9;
+      --muted: #9aa89c;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 12vh, 8rem) 1.5rem 3rem;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--brand);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: .35rem .8rem;
+    margin-bottom: 1.75rem;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 7vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin: 0 0 1rem;
+  }
+  h1 .dot { color: var(--brand); }
+
+  .lede {
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    color: var(--muted);
+    margin: 0 0 2.5rem;
+    max-width: 34rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .card h2 {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 .75rem;
+  }
+  .card p { margin: 0 0 .85rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  a.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--brand);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: .85rem 1.5rem;
+    border-radius: 8px;
+  }
+  a.cta:hover { filter: brightness(1.08); }
+  a.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+  @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.75rem 1.5rem 2.5rem;
+  }
+  .footer-inner {
+    max-width: 44rem;
+    margin: 0 auto;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+  .footer-inner p { margin: 0 0 .4rem; }
+  .footer-inner a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<main>
+  <span class="eyebrow">An official timber&#8203;.bid domain</span>
+
+  <h1>lumber<span class="dot">.</span>bid</h1>
+
+  <p class="lede">
+    Reserved for the sawmill and lumber side of timber.bid — grading logs,
+    board-foot valuation, and sealed timber bids.
+  </p>
+
+  <div class="card">
+    <h2>Status</h2>
+    <p>
+      That vertical is still being built. <strong>There is no marketplace on
+      this domain yet</strong> — no listings, no bidding, nothing to sign up for.
+      This page exists so the address resolves to something honest instead of a
+      parking page.
+    </p>
+    <p>
+      Tree services and firewood <em>are</em> live today, on the main site.
+    </p>
+  </div>
+
+  <a class="cta" href="https://timber.bid/">Go to timber.bid &rarr;</a>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace</p>
+    <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
+    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
