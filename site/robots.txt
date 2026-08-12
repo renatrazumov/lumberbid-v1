@@ -1,11 +1,15 @@
-# Deliberately not indexed.
+# Crawling is ALLOWED on purpose. Indexing is blocked by the `noindex` meta tag
+# in index.html — and that only works if crawlers can actually fetch the page.
 #
-# This is a holding page, not a product. Indexing it would put thin content in
-# front of searchers looking for a lumber marketplace that does not exist yet,
-# and would compete with timber.bid for the company's own brand terms.
+# The obvious-looking `Disallow: /` is self-defeating here: it stops the crawler
+# from reading the page at all, so it never sees the noindex rule, and the URL
+# can still be indexed (URL-only, no snippet) if anything links to it. Since this
+# domain is about to appear in email, links to it are exactly what will happen.
+# Allow the fetch, let the noindex do the work — that is the combination that
+# actually guarantees the page stays out of the index.
 #
-# Lift this when the sawmill/lumber vertical actually ships and this domain
-# serves something real.
+# When the sawmill/lumber vertical ships and this domain serves something real,
+# drop the noindex meta from index.html and add a Sitemap line below.
 
 User-agent: *
-Disallow: /
+Allow: /
