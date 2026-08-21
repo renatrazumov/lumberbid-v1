@@ -27,21 +27,13 @@
   :root {
     --brand: #2E7D32;
     --bg: #ffffff;
-    --surface: #f6f7f5;
-    --border: #e2e5e0;
-    --text: #16281a;
-    --muted: #5c6b5f;
+    --surface: #fafbfa;
+    --border: #e3e7e3;
+    --text: #1c2420;
+    --muted: #5f6b63;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --brand: #6FBF73;
-      --bg: #10140f;
-      --surface: #171d16;
-      --border: #2a332a;
-      --text: #eaf0e9;
-      --muted: #9aa89c;
-    }
-  }
+  /* Light-only on purpose since 2026-08-21: one company, one look —
+     matching timber.bid itself and site/brand.css. */
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -125,7 +117,6 @@
   }
   a.cta:hover { filter: brightness(1.08); }
   a.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-  @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
 
   /* Waitlist form — same visual family as .card. */
   .wl-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .85rem; }
@@ -156,11 +147,9 @@
   button.cta:hover { filter: brightness(1.08); }
   button.cta:disabled { opacity: .6; cursor: default; }
   button.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-  @media (prefers-color-scheme: dark) { button.cta { color: #0d1a0e; } }
   .wl-status { font-size: .9rem; margin: .25rem 0 0; }
   .wl-status.ok { color: var(--brand); font-weight: 600; }
   .wl-status.err { color: #B3261E; }
-  @media (prefers-color-scheme: dark) { .wl-status.err { color: #F2B8B5; } }
   .wl-fine { font-size: .78rem; color: var(--muted); margin: .6rem 0 0; }
   .steps { margin: 0; padding-left: 1.3rem; }
   .steps li { margin-bottom: .7rem; }
@@ -267,7 +256,7 @@
 
 <footer>
   <div class="footer-inner">
-    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace</p>
+    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
     <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
     <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
   </div>

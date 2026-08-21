@@ -3,115 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Log value estimator — lumber.bid</title>
+<title>Instant Log Estimate — lumber.bid</title>
 
-<!-- Indexable on purpose: this is a real tool, not a holding page. -->
-<meta name="description" content="Free log value estimator: board feet by Doyle or International ¼″ rule, sawlog grade, and an honest dollar band for walnut, oak, cherry and more — standing or delivered to mill.">
+<meta name="description" content="Snap a photo of your log for an instant value estimate — species, board feet by Doyle or International rule, sawlog grade, and an honest dollar band. Free, no account needed.">
 <link rel="canonical" href="https://lumber.bid/estimate">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Log value estimator — lumber.bid">
-<meta property="og:description" content="Is that log worth anything? Board feet, grade, and a value band — bands, never false precision.">
+<meta property="og:title" content="Instant Log Estimate — lumber.bid">
+<meta property="og:description" content="Is that log worth anything? Photo → species, board feet, grade, and a value band. Bands, never false precision.">
 <meta property="og:url" content="https://lumber.bid/estimate">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
-
-<style>
-  :root {
-    --brand: #2E7D32;
-    --bg: #ffffff;
-    --surface: #f6f7f5;
-    --border: #e2e5e0;
-    --text: #16281a;
-    --muted: #5c6b5f;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --brand: #6FBF73;
-      --bg: #10140f;
-      --surface: #171d16;
-      --border: #2a332a;
-      --text: #eaf0e9;
-      --muted: #9aa89c;
-    }
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--text);
-    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    display: flex; flex-direction: column; min-height: 100vh;
-  }
-  main { flex: 1; width: 100%; max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
-  a.home { color: var(--muted); text-decoration: none; font-size: .85rem; }
-  a.home:hover { color: var(--brand); }
-  h1 { font-size: clamp(1.7rem, 5vw, 2.4rem); line-height: 1.15; letter-spacing: -.02em; margin: .75rem 0 .5rem; }
-  h1 .dot { color: var(--brand); }
-  .lede { color: var(--muted); margin: 0 0 1.75rem; max-width: 36rem; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-  .card h2 { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
-  label.f { display: block; font-size: .85rem; color: var(--muted); margin: 0 0 .25rem; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem 1rem; }
-  .grid .full { grid-column: 1 / -1; }
-  select, input[type="number"] {
-    width: 100%; font: inherit; color: var(--text); background: var(--bg);
-    border: 1px solid var(--border); border-radius: 8px; padding: .6rem .8rem;
-  }
-  select:focus-visible, input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
-  .opts { display: flex; flex-wrap: wrap; gap: .35rem .9rem; }
-  .opts label { display: inline-flex; align-items: center; gap: .4rem; font-size: .92rem; cursor: pointer; }
-  .opts input { accent-color: var(--brand); }
-  #est-result { border-color: var(--brand); }
-  .est-row { display: flex; justify-content: space-between; gap: 1rem; padding: .45rem 0; border-bottom: 1px dashed var(--border); }
-  .est-row span { color: var(--muted); }
-  .est-net strong { color: var(--brand); font-size: 1.15rem; }
-  .est-verdict { margin: .9rem 0 0; font-weight: 600; }
-  .est-verdict.ok { color: var(--brand); }
-  .est-flags { margin: .75rem 0 0; padding-left: 1.2rem; color: var(--muted); font-size: .9rem; }
-  .est-flags li { margin-bottom: .25rem; }
-  .wl-fine { font-size: .78rem; color: var(--muted); margin: .8rem 0 0; }
-  a.cta {
-    display: inline-flex; align-items: center; gap: .5rem;
-    background: var(--brand); color: #fff; text-decoration: none; font-weight: 600;
-    padding: .8rem 1.4rem; border-radius: 8px;
-  }
-  a.cta:hover { filter: brightness(1.08); }
-  @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
-  footer { border-top: 1px solid var(--border); padding: 1.75rem 1.5rem 2.5rem; }
-  .footer-inner { max-width: 44rem; margin: 0 auto; font-size: .8rem; color: var(--muted); }
-  .footer-inner p { margin: 0 0 .4rem; }
-  .footer-inner a { color: var(--muted); }
-</style>
+<link rel="stylesheet" href="/brand.css">
 </head>
 <body>
 
 <main>
-  <a class="home" href="/">&larr; lumber.bid</a>
-  <h1>Is that log worth anything<span class="dot">?</span></h1>
-  <p class="lede">
-    Board feet, sawlog grade, and an honest dollar band — from species, small-end
-    diameter and length. Bands, never false precision: a log's real price is set
-    by the buyer who inspects it, which is exactly why good lots sell by sealed bid.
-  </p>
-
-  <div class="card" id="photo-card">
-    <h2>Start with a photo</h2>
-    <p>
-      Snap the log — include something for scale (a tape, a chainsaw, a person)
-      and the AI reads species, diameter and length into the form below.
-      <strong>You confirm every number</strong>; nothing is priced from the
-      photo directly, and the photo isn&rsquo;t stored.
-    </p>
-    <div class="wl-row">
-      <input type="file" id="est-photo" accept="image/*" capture="environment" aria-label="Log photo">
-      <button type="button" class="cta" id="est-photo-go">Read the log &rarr;</button>
+  <div class="brand-head">
+    <a class="brand-back" href="/" aria-label="Back to lumber.bid">&larr;</a>
+    <div>
+      <div class="brand-name"><a href="/">lumber.bid</a></div>
+      <div class="brand-sub">sealed timber bids &middot; a timber.bid company</div>
     </div>
-    <p class="wl-status" id="est-photo-status" role="status"></p>
   </div>
 
-  <form id="est-form" class="card">
-    <h2>The log</h2>
+  <h1>Instant Log Estimate</h1>
+  <p class="lede">
+    Snap a photo of your log for an instant value read — species, board feet,
+    sawlog grade, and an honest dollar band. You confirm every number before it
+    prices. Free, no account needed.
+  </p>
+
+  <!-- The photo boxes — same hero pattern as timber.bid/estimate, with the
+       three angles that matter for a LOG: the whole stick, the end grain
+       (diameter + rings + defects live here), and the bark (species). -->
+  <div class="shots" id="shots">
+    <button type="button" class="shot" data-slot="0" aria-label="Add a full log photo">
+      <svg class="cam" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1" y="4" width="22" height="13" rx="2.5"/><circle cx="12" cy="10.5" r="4"/><path d="M8 4l1.5-2.5h5L16 4"/><path d="M19.5 1v3M18 2.5h3" stroke-width="1.4"/></svg>
+      <img class="preview" alt="" hidden>
+      <span class="t">Full log</span>
+      <span class="d">The whole stick in frame — with a tape, chainsaw or person for scale.</span>
+    </button>
+    <button type="button" class="shot" data-slot="1" aria-label="Add an end grain photo">
+      <svg class="cam" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1" y="4" width="22" height="13" rx="2.5"/><circle cx="12" cy="10.5" r="4"/><path d="M8 4l1.5-2.5h5L16 4"/><path d="M19.5 1v3M18 2.5h3" stroke-width="1.4"/></svg>
+      <img class="preview" alt="" hidden>
+      <span class="t">End grain <span class="opt">optional</span></span>
+      <span class="d">Straight at the cut end — diameter, rings and rot read from here.</span>
+    </button>
+    <button type="button" class="shot" data-slot="2" aria-label="Add a bark closeup photo">
+      <svg class="cam" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1" y="4" width="22" height="13" rx="2.5"/><circle cx="12" cy="10.5" r="4"/><path d="M8 4l1.5-2.5h5L16 4"/><path d="M19.5 1v3M18 2.5h3" stroke-width="1.4"/></svg>
+      <img class="preview" alt="" hidden>
+      <span class="t">Bark closeup <span class="opt">optional</span></span>
+      <span class="d">Arm's length from the bark — species reads from here.</span>
+    </button>
+    <input type="file" id="shot-file" accept="image/*" capture="environment" hidden>
+  </div>
+  <p class="shots-hint">&#128247; One photo of the log is enough to start. Click a box to add one.</p>
+
+  <button type="button" class="cta-big" id="est-photo-go" disabled>Get Log Estimate</button>
+  <p class="cta-helper" id="est-photo-helper">Add at least one photo of the log</p>
+  <p class="wl-status" id="est-photo-status" role="status"></p>
+
+  <!-- The confirm form: the AI fills it, the seller corrects it, the band
+       renders from these fields and ONLY these fields. -->
+  <form id="est-form" class="card" style="margin-top:1.25rem">
+    <h2>Confirm the numbers &mdash; or fill them in by hand</h2>
     <div class="grid">
       <div>
         <label class="f" for="est-species">Species</label>
@@ -146,7 +102,7 @@
         <label class="f">Log rule</label>
         <div class="opts">
           <label><input type="radio" name="rule" value="doyle" checked> Doyle (Eastern norm)</label>
-          <label><input type="radio" name="rule" value="international"> International ¼″</label>
+          <label><input type="radio" name="rule" value="international"> International &frac14;&Prime;</label>
         </div>
       </div>
       <div class="full">
@@ -181,20 +137,51 @@
   <div id="est-result" class="card" hidden aria-live="polite"></div>
 
   <div class="card">
-    <h2>What to do with a good number</h2>
-    <p>
-      A high-grade log — walnut and white oak especially — is worth a competing
-      market, not one buyer's offer. That is what this domain is being built for:
-      sealed timber bids on the timber.bid funded rail. It isn&rsquo;t open yet;
-      the <a href="/">waitlist on the front page</a> gets one email when it is.
-    </p>
-    <a class="cta" href="/#waitlist-form">Get the one email &rarr;</a>
+    <h2>What &ldquo;honest&rdquo; means here</h2>
+    <ul class="trust">
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 17l6-10 4 6 3-4 5 8z"/><path d="M3 21h18"/></svg>
+        <div><strong>Bands, never quotes</strong>
+        <span class="why">Log prices are regional and volatile. Every number here is a range anchored to survey data, and the page says so.</span></div>
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+        <div><strong>You confirm every number</strong>
+        <span class="why">The photo fills the form; it never prices directly. Correct any field and the band recalculates.</span></div>
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div><strong>What a photo can&rsquo;t see, we say out loud</strong>
+        <span class="why">Internal rot, ring shake and buried metal are often invisible. Veneer money especially needs a buyer&rsquo;s in-person look &mdash; the tool flags it, not hides it.</span></div>
+      </li>
+    </ul>
   </div>
+
+  <section class="prose">
+    <h2>How the log estimate works</h2>
+    <p>
+      Upload a photo of the log &mdash; ideally the whole stick with something for
+      scale, plus the end grain. lumber.bid reads species, small-end diameter and
+      merchantable length against the reference objects in frame, grades the log
+      the way a sawyer would (veneer &ge;22&Prime; clear, Grade&nbsp;1 &ge;16&Prime;, down to
+      firewood below 10&Prime;), and returns a <strong>value band</strong> rather
+      than a single number.
+    </p>
+    <p>
+      A band is the honest answer. Nobody can price a log exactly from a
+      photograph &mdash; the things that move a log&rsquo;s price most are internal
+      soundness, metal, and which buyer needs it, and all three are only fully
+      knowable at inspection. The estimate exists so you know whether you are
+      looking at firewood or at a four-figure walnut stick before anyone drives
+      out &mdash; and why good logs sell by <a href="/#how">sealed bid</a>, where
+      buyers compete instead of naming your price for you.
+    </p>
+  </section>
 </main>
 
 <footer>
   <div class="footer-inner">
-    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace</p>
+    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
     <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
     <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
   </div>

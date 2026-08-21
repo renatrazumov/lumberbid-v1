@@ -3,6 +3,14 @@
 // this file only reads the form, calls LogModel.valueLog, and renders bands.
 // House rule carried through: bands, never a single confident number, and the
 // output is labelled an estimate, never a quote.
+//
+// Photo mode COUNTERPART: timberbid-v1:supabase/functions/estimate-log
+// (vision-only, returns measured facts + confidences, never a price). The
+// pricing stays HERE in log-model.js, so the same fields the AI fills are the
+// same fields the seller can correct — no hidden path from photo to dollars.
+// Layout mirrors timber.bid/estimate (three shot boxes, one big CTA): one
+// company, one format. The three angles are the LOG's three: full stick
+// (scale), end grain (diameter/rings/rot), bark (species).
 
 (function () {
   'use strict';
@@ -41,6 +49,7 @@
     var v = M.valueLog(input);
 
     var rows = [];
+    rows.push('<h2>The estimate</h2>');
     rows.push('<div class="est-row"><span>Board feet (' + (input.rule === 'doyle' ? 'Doyle' : 'International ¼″') + ')</span><strong>' + v.boardFeet.toLocaleString('en-US') + ' BF</strong></div>');
     rows.push('<div class="est-row"><span>Grade</span><strong>' + GRADE_LABEL[v.grade] + '</strong></div>');
 
@@ -67,20 +76,30 @@
   form.addEventListener('submit', function (ev) { ev.preventDefault(); render(); });
   render(); // walnut default renders immediately — the flagship case on load
 
-  // --- Photo mode: the AI reads the log, the human confirms the numbers. ---
-  // COUNTERPART: timberbid-v1:supabase/functions/estimate-log (vision-only,
-  // returns measured facts + confidences, never a price). The pricing stays
-  // HERE in log-model.js, so the same fields the AI fills are the same fields
-  // the seller can correct — no hidden path from photo to dollars.
+  // --- Photo mode --------------------------------------------------------
   var FN_URL = 'https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/estimate-log';
-  var photoInput = document.getElementById('est-photo');
-  var photoGo = document.getElementById('est-photo-go');
-  var photoStatus = document.getElementById('est-photo-status');
-  if (!photoInput || !photoGo) return;
+  var shotsWrap = document.getElementById('shots');
+  var fileInput = document.getElementById('shot-file');
+  var goBtn = document.getElementById('est-photo-go');
+  var helper = document.getElementById('est-photo-helper');
+  var statusEl = document.getElementById('est-photo-status');
+  if (!shotsWrap || !fileInput || !goBtn) return;
+
+  // Up to three downscaled data URLs, indexed by slot (full / end / bark).
+  var photos = [null, null, null];
+  var activeSlot = 0;
 
   function say(msg, ok) {
-    photoStatus.textContent = msg;
-    photoStatus.className = 'wl-status' + (ok === true ? ' ok' : ok === false ? ' err' : '');
+    statusEl.textContent = msg;
+    statusEl.className = 'wl-status' + (ok === true ? ' ok' : ok === false ? ' err' : '');
+  }
+
+  function refreshCta() {
+    var n = photos.filter(Boolean).length;
+    goBtn.disabled = n === 0;
+    helper.textContent = n === 0
+      ? 'Add at least one photo of the log'
+      : n + ' photo' + (n > 1 ? 's' : '') + ' ready — more angles read better';
   }
 
   // Downscale client-side so a 12MP phone photo becomes a ~200KB JPEG. The
@@ -103,6 +122,34 @@
       img.src = url;
     });
   }
+
+  // Click a box → pick a file → downscale → thumbnail into that box.
+  shotsWrap.addEventListener('click', function (ev) {
+    var box = ev.target.closest ? ev.target.closest('.shot') : null;
+    if (!box) return;
+    activeSlot = parseInt(box.getAttribute('data-slot'), 10) || 0;
+    fileInput.value = '';
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', function () {
+    var file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    var box = shotsWrap.querySelector('.shot[data-slot="' + activeSlot + '"]');
+    say('');
+    downscale(file)
+      .then(function (dataUrl) {
+        photos[activeSlot] = dataUrl;
+        if (box) {
+          box.classList.add('filled');
+          var pv = box.querySelector('img.preview');
+          var cam = box.querySelector('svg.cam');
+          if (pv) { pv.src = dataUrl; pv.hidden = false; }
+          if (cam) cam.style.display = 'none';
+        }
+        refreshCta();
+      })
+      .catch(function () { say('That image could not be read — try another photo.', false); });
+  });
 
   function setRadio(name, value) {
     var el = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
@@ -130,35 +177,35 @@
 
     var bits = [
       'Read: ' + f.species + ' (' + f.species_confidence + ' confidence), ' +
-      f.small_end_diameter_in + '\u2033 \u00d7 ' + f.length_ft + ' ft' +
-      (f.reference_object ? ', scaled by ' + f.reference_object : ', NO scale object \u2014 diameter is a rough guess'),
+      f.small_end_diameter_in + '″ × ' + f.length_ft + ' ft' +
+      (f.reference_object ? ', scaled by ' + f.reference_object : ', NO scale object — diameter is a rough guess'),
     ];
-    if (f.figured_suspected) bits.push('Possible figure \u2014 worth a buyer\u2019s inspection.');
+    if (f.figured_suspected) bits.push('Possible figure — worth a buyer’s inspection.');
     if (f.notes) bits.push(f.notes);
-    bits.push('Check the numbers \u2014 every field below is yours to correct.');
+    bits.push('Check the numbers below — every field is yours to correct.');
     say(bits.join(' '), true);
   }
 
-  photoGo.addEventListener('click', function () {
-    var file = photoInput.files && photoInput.files[0];
-    if (!file) { say('Choose or take a photo first.', false); return; }
-    photoGo.disabled = true;
-    say('Reading the log\u2026');
-    downscale(file)
-      .then(function (dataUrl) {
-        return fetch(FN_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ photos: [dataUrl] }),
-        });
-      })
+  goBtn.addEventListener('click', function () {
+    var send = photos.filter(Boolean);
+    if (send.length === 0) { say('Add at least one photo first.', false); return; }
+    goBtn.disabled = true;
+    helper.textContent = '';
+    say('Reading the log…');
+    fetch(FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photos: send }),
+    })
       .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
       .then(function (r) {
-        if (!r.ok) { say(r.j && r.j.error ? r.j.error : 'Could not read the photo \u2014 try again.', false); return; }
-        if (!r.j.log_detected) { say(r.j.reject_reason || 'No log visible in that photo \u2014 try another angle.', false); return; }
+        if (!r.ok) { say(r.j && r.j.error ? r.j.error : 'Could not read the photo — try again.', false); return; }
+        if (!r.j.log_detected) { say(r.j.reject_reason || 'No log visible in that photo — try another angle.', false); return; }
         applyFacts(r.j);
       })
-      .catch(function () { say('Network problem \u2014 check your connection and try again.', false); })
-      .finally(function () { photoGo.disabled = false; });
+      .catch(function () { say('Network problem — check your connection and try again.', false); })
+      .finally(function () { goBtn.disabled = false; refreshCta(); });
   });
+
+  refreshCta();
 })();
