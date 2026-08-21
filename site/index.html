@@ -127,6 +127,42 @@
   a.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
   @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
 
+  /* Waitlist form — same visual family as .card. */
+  .wl-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .85rem; }
+  .wl-who { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-bottom: 1rem; }
+  .wl-who label {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .92rem; color: var(--text); cursor: pointer;
+  }
+  .wl-who input { accent-color: var(--brand); }
+  input[type="email"], input[type="text"] {
+    flex: 1 1 12rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .7rem .9rem;
+  }
+  input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+  #wl-zip { flex: 0 1 7.5rem; }
+  button.cta {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--brand); color: #fff;
+    border: 0; cursor: pointer;
+    font: inherit; font-weight: 600;
+    padding: .75rem 1.4rem; border-radius: 8px;
+  }
+  button.cta:hover { filter: brightness(1.08); }
+  button.cta:disabled { opacity: .6; cursor: default; }
+  button.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+  @media (prefers-color-scheme: dark) { button.cta { color: #0d1a0e; } }
+  .wl-status { font-size: .9rem; margin: .25rem 0 0; }
+  .wl-status.ok { color: var(--brand); font-weight: 600; }
+  .wl-status.err { color: #B3261E; }
+  @media (prefers-color-scheme: dark) { .wl-status.err { color: #F2B8B5; } }
+  .wl-fine { font-size: .78rem; color: var(--muted); margin: .6rem 0 0; }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 1.75rem 1.5rem 2.5rem;
@@ -166,8 +202,34 @@
     </p>
   </div>
 
+  <div class="card">
+    <h2>One email when it opens</h2>
+    <p>
+      If lumber is your business — logs to sell, a mill to feed, land with
+      timber on it — leave your email and we&rsquo;ll send <strong>one note</strong>
+      when this opens. Nothing else, no list to be marketed to.
+    </p>
+    <form id="waitlist-form">
+      <div class="wl-who" role="radiogroup" aria-label="Which best describes you">
+        <label><input type="radio" name="who" value="got_logs" checked> I have logs</label>
+        <label><input type="radio" name="who" value="mill_or_buy"> I mill or buy logs</label>
+        <label><input type="radio" name="who" value="landowner"> I&rsquo;m a landowner</label>
+      </div>
+      <div class="wl-row">
+        <input id="wl-email" type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+        <input id="wl-zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP (optional)" aria-label="ZIP code, optional">
+      </div>
+      <button id="wl-submit" class="cta" type="submit">Notify me</button>
+    </form>
+    <p id="wl-status" class="wl-status" role="status" aria-live="polite"></p>
+    <noscript><p class="wl-fine">This form needs JavaScript.</p></noscript>
+    <p class="wl-fine">Used only for that one announcement. See the privacy policy below.</p>
+  </div>
+
   <a class="cta" href="https://timber.bid/">Go to timber.bid &rarr;</a>
 </main>
+
+<script src="/waitlist.js" defer></script>
 
 <footer>
   <div class="footer-inner">

@@ -6,7 +6,8 @@ A **front end on timber.bid's backend.** Not a new product, not a new backend.
 One Supabase project (`uuzqezohkqgsbbxyzvvv`), one Stripe platform, one email
 chokepoint — shared with `timber.bid`, `wood.delivery` and `timberbid.app`.
 
-Today it serves **one static holding page** and nothing else.
+Today it serves **one static holding page** plus **one write**: the lumber
+interest waitlist (anon insert into `wood_delivery_waitlist`). Nothing else.
 
 The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
@@ -20,6 +21,7 @@ Read it before building anything here.
 | DNS | delegated to Netlify (`dns1-4.p05.nsone.net`) |
 | Build | **none** — `netlify.toml` publishes `site/` with no build command |
 | Resend | **verified**; receiving **OFF** (no apex MX); sends nothing |
+| Waitlist | **LIVE** — `site/waitlist.js` inserts `role='interested'`, `source='lumber.bid'` |
 | Product | **stage 3 — specced, not built** |
 
 ## The honesty rule — this is the one that gets broken
@@ -90,10 +92,28 @@ publish-only site cannot fail to build. **Astro** (matching `wood.delivery`) is
 the right stack the moment this surface carries real content.
 
 ```
-netlify.toml     publish config + security headers (CSP: default-src 'none')
-site/index.html  the holding page — self-contained, inline CSS, no scripts
+netlify.toml     publish config + security headers (CSP: default-src 'none',
+                 plus script-src 'self' and connect-src to the Supabase project)
+site/index.html  the holding page — inline CSS, one deferred first-party script
+site/waitlist.js the ONE write this site makes (see contract below)
 site/robots.txt  crawling ALLOWED; noindex is done by the meta tag
 ```
+
+### The waitlist contract (verified against prod 2026-08-14)
+
+`public.wood_delivery_waitlist` is SHARED. Its other writers are
+`wooddelivery:src/lib/driveWaitlist.ts` and
+`timberbid-v1:app/wood-delivery/index.tsx` (both `role='driver'`). Change the
+shape in all three places or none.
+
+- `role` CHECK allows ONLY `driver|provider|buyer|interested`. There is no
+  `'lumber'` role — the lumber segment lives in `source='lumber.bid'` +
+  `note='lumber: <who>'`, never in `role`.
+- anon has INSERT and **no SELECT** → always `Prefer: return=minimal`; asking
+  for RETURNING rolls the insert back (same rule as the column-locked reads).
+- 409 duplicate = already on the list = success.
+- These addresses are promised **one announcement email**, nothing else. Do not
+  fold them into any campaign audience without a fresh opt-in.
 
 `robots.txt` allows crawling on purpose: `Disallow` would stop crawlers reading
 the `noindex` meta tag, and a blocked URL can still be indexed if linked. Allow

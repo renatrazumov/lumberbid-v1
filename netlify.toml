@@ -21,6 +21,8 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    # The page is fully self-contained: inline <style>, no scripts, no external
-    # requests. Everything else is denied rather than merely unused.
-    Content-Security-Policy = "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"
+    # One first-party script (site/waitlist.js) and ONE permitted connect
+    # target: the shared Supabase project, for the waitlist insert. Everything
+    # else stays denied. form-action stays 'none' on purpose — the form is
+    # intercepted by JS and must never fall through to a native POST.
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; connect-src https://uuzqezohkqgsbbxyzvvv.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"
