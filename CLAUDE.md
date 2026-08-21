@@ -6,8 +6,14 @@ A **front end on timber.bid's backend.** Not a new product, not a new backend.
 One Supabase project (`uuzqezohkqgsbbxyzvvv`), one Stripe platform, one email
 chokepoint — shared with `timber.bid`, `wood.delivery` and `timberbid.app`.
 
-Today it serves **one static holding page** plus **one write**: the lumber
-interest waitlist (anon insert into `wood_delivery_waitlist`). Nothing else.
+Today it serves the sealed-bid front door plus **one write** (the lumber
+interest waitlist, anon insert into `wood_delivery_waitlist`) and **one
+backend call**: `POST /functions/v1/estimate-log` from `/estimate` — a
+vision-only edge fn in timberbid-v1 that reads a log photo into MEASURED FACTS
+(species, diameter, length, condition + confidences). It never prices; the
+bands are computed client-side in `site/log-model.js`. The fn's header names
+this page as its counterpart — change the response contract in both places or
+neither.
 
 The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
@@ -106,7 +112,8 @@ netlify.toml     publish config + security headers (CSP: default-src 'none',
                  plus script-src 'self' and connect-src to the Supabase project)
 site/index.html  the holding page — inline CSS, one deferred first-party script
 site/waitlist.js the ONE write this site makes (see contract below)
-site/estimate.html + estimate.js + log-model.js — the log value estimator.
+site/estimate.html + estimate.js + log-model.js — the log value estimator
+                 (photo mode calls timberbid-v1:estimate-log; see above).
                  log-model.js is a FAITHFUL PORT of timberbid-v1:utils/
                  logValuation.ts (counterpart-commented both ways; update both
                  or neither; cross-checked against its jest suite at port time)

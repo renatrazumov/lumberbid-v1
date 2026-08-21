@@ -95,6 +95,21 @@
     by the buyer who inspects it, which is exactly why good lots sell by sealed bid.
   </p>
 
+  <div class="card" id="photo-card">
+    <h2>Start with a photo</h2>
+    <p>
+      Snap the log — include something for scale (a tape, a chainsaw, a person)
+      and the AI reads species, diameter and length into the form below.
+      <strong>You confirm every number</strong>; nothing is priced from the
+      photo directly, and the photo isn&rsquo;t stored.
+    </p>
+    <div class="wl-row">
+      <input type="file" id="est-photo" accept="image/*" capture="environment" aria-label="Log photo">
+      <button type="button" class="cta" id="est-photo-go">Read the log &rarr;</button>
+    </div>
+    <p class="wl-status" id="est-photo-status" role="status"></p>
+  </div>
+
   <form id="est-form" class="card">
     <h2>The log</h2>
     <div class="grid">
