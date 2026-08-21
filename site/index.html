@@ -32,8 +32,20 @@
     --text: #1c2420;
     --muted: #5f6b63;
   }
-  /* Light-only on purpose since 2026-08-21: one company, one look —
-     matching timber.bid itself and site/brand.css. */
+  /* The homepage keeps its forest-green dark theme (restored 2026-08-21 at the
+     founder's request after the family-format pass went light-only). The
+     estimator page follows timber.bid's light format; the front door keeps
+     lumber.bid's own green. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --brand: #6FBF73;
+      --bg: #10140f;
+      --surface: #171d16;
+      --border: #2a332a;
+      --text: #eaf0e9;
+      --muted: #9aa89c;
+    }
+  }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -117,6 +129,7 @@
   }
   a.cta:hover { filter: brightness(1.08); }
   a.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+  @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
 
   /* Waitlist form — same visual family as .card. */
   .wl-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .85rem; }
@@ -147,9 +160,11 @@
   button.cta:hover { filter: brightness(1.08); }
   button.cta:disabled { opacity: .6; cursor: default; }
   button.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+  @media (prefers-color-scheme: dark) { button.cta { color: #0d1a0e; } }
   .wl-status { font-size: .9rem; margin: .25rem 0 0; }
   .wl-status.ok { color: var(--brand); font-weight: 600; }
   .wl-status.err { color: #B3261E; }
+  @media (prefers-color-scheme: dark) { .wl-status.err { color: #F2B8B5; } }
   .wl-fine { font-size: .78rem; color: var(--muted); margin: .6rem 0 0; }
   .steps { margin: 0; padding-left: 1.3rem; }
   .steps li { margin-bottom: .7rem; }
