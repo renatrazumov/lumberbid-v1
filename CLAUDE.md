@@ -22,7 +22,9 @@ Read it before building anything here.
 | Build | **none** — `netlify.toml` publishes `site/` with no build command |
 | Resend | **verified**; receiving **OFF** (no apex MX); sends nothing |
 | Waitlist | **LIVE** — `site/waitlist.js` inserts `role='interested'`, `source='lumber.bid'` |
-| Product | **stage 3 — specced, not built** |
+| Product | **sealed-bid RAILS LIVE in prod** (migration `20260821003609`, 2026-08-21) — app surfaces + buyer liquidity still pending; first sales broker-run |
+| Estimator | **LIVE** at `/estimate` — `site/log-model.js` (port of `utils/logValuation.ts`, 27/27 cross-checked) |
+| SEO | **indexed** as of 2026-08-21 (noindex lifted — real content shipped); `sitemap.xml` with 2 URLs |
 
 ## The honesty rule — this is the one that gets broken
 
@@ -32,8 +34,10 @@ listings. timber.bid has already paid for breaking this twice (a claim page
 promising jobs that did not exist; a firewood company shown tree-service copy).
 
 Copy here must not promise buyers, prices, or a marketplace. The current page
-says outright *"There is no marketplace on this domain yet."* Keep it that way
-until it is false.
+says outright *"No auction is open yet"* and that first sales are broker-run
+while the buyer side is seeded. The RAILS being live (sealed mode in prod) does
+not make liquidity claims true — keep the distinction sharp until a real lot
+has really closed with competing bids.
 
 ## Never reimplement these — they are single-source in timberbid-v1
 
@@ -50,7 +54,13 @@ timberbid-v1 and this site deep-links to it.
 
 The sealed-bid product belongs in **timberbid-v1**, not here — it needs deposits,
 escrow, fee math and payouts, and the funded-deals engine already does all of
-that, entity-aware.
+that, entity-aware. **Its foundation is APPLIED** (ledger `20260821003609`):
+`auction_mode='sealed'` on `listings`, sealed-aware `place_auction_bid` /
+`claim_ended_auctions` / `get_auction_bids`, the `raw_timber` constraint fix,
+and lot columns (`species`, `estimated_board_feet`, `metal_risk`). The deployed
+`close-auctions` worker needed zero changes — sealed winners resolve at claim
+time into the columns it already reads. This site deep-links; it never
+reimplements any of that.
 
 ## Rules that will bite you
 
@@ -96,7 +106,12 @@ netlify.toml     publish config + security headers (CSP: default-src 'none',
                  plus script-src 'self' and connect-src to the Supabase project)
 site/index.html  the holding page — inline CSS, one deferred first-party script
 site/waitlist.js the ONE write this site makes (see contract below)
-site/robots.txt  crawling ALLOWED; noindex is done by the meta tag
+site/estimate.html + estimate.js + log-model.js — the log value estimator.
+                 log-model.js is a FAITHFUL PORT of timberbid-v1:utils/
+                 logValuation.ts (counterpart-commented both ways; update both
+                 or neither; cross-checked against its jest suite at port time)
+site/robots.txt  crawling + indexing allowed (2026-08-21); Sitemap line
+site/sitemap.xml two URLs, static
 ```
 
 ### The waitlist contract (verified against prod 2026-08-14)

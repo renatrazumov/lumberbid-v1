@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log value estimator — lumber.bid</title>
+
+<!-- Indexable on purpose: this is a real tool, not a holding page. -->
+<meta name="description" content="Free log value estimator: board feet by Doyle or International ¼″ rule, sawlog grade, and an honest dollar band for walnut, oak, cherry and more — standing or delivered to mill.">
+<link rel="canonical" href="https://lumber.bid/estimate">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Log value estimator — lumber.bid">
+<meta property="og:description" content="Is that log worth anything? Board feet, grade, and a value band — bands, never false precision.">
+<meta property="og:url" content="https://lumber.bid/estimate">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --brand: #2E7D32;
+    --bg: #ffffff;
+    --surface: #f6f7f5;
+    --border: #e2e5e0;
+    --text: #16281a;
+    --muted: #5c6b5f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --brand: #6FBF73;
+      --bg: #10140f;
+      --surface: #171d16;
+      --border: #2a332a;
+      --text: #eaf0e9;
+      --muted: #9aa89c;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  main { flex: 1; width: 100%; max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+  a.home { color: var(--muted); text-decoration: none; font-size: .85rem; }
+  a.home:hover { color: var(--brand); }
+  h1 { font-size: clamp(1.7rem, 5vw, 2.4rem); line-height: 1.15; letter-spacing: -.02em; margin: .75rem 0 .5rem; }
+  h1 .dot { color: var(--brand); }
+  .lede { color: var(--muted); margin: 0 0 1.75rem; max-width: 36rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .card h2 { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
+  label.f { display: block; font-size: .85rem; color: var(--muted); margin: 0 0 .25rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem 1rem; }
+  .grid .full { grid-column: 1 / -1; }
+  select, input[type="number"] {
+    width: 100%; font: inherit; color: var(--text); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px; padding: .6rem .8rem;
+  }
+  select:focus-visible, input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .opts { display: flex; flex-wrap: wrap; gap: .35rem .9rem; }
+  .opts label { display: inline-flex; align-items: center; gap: .4rem; font-size: .92rem; cursor: pointer; }
+  .opts input { accent-color: var(--brand); }
+  #est-result { border-color: var(--brand); }
+  .est-row { display: flex; justify-content: space-between; gap: 1rem; padding: .45rem 0; border-bottom: 1px dashed var(--border); }
+  .est-row span { color: var(--muted); }
+  .est-net strong { color: var(--brand); font-size: 1.15rem; }
+  .est-verdict { margin: .9rem 0 0; font-weight: 600; }
+  .est-verdict.ok { color: var(--brand); }
+  .est-flags { margin: .75rem 0 0; padding-left: 1.2rem; color: var(--muted); font-size: .9rem; }
+  .est-flags li { margin-bottom: .25rem; }
+  .wl-fine { font-size: .78rem; color: var(--muted); margin: .8rem 0 0; }
+  a.cta {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--brand); color: #fff; text-decoration: none; font-weight: 600;
+    padding: .8rem 1.4rem; border-radius: 8px;
+  }
+  a.cta:hover { filter: brightness(1.08); }
+  @media (prefers-color-scheme: dark) { a.cta { color: #0d1a0e; } }
+  footer { border-top: 1px solid var(--border); padding: 1.75rem 1.5rem 2.5rem; }
+  .footer-inner { max-width: 44rem; margin: 0 auto; font-size: .8rem; color: var(--muted); }
+  .footer-inner p { margin: 0 0 .4rem; }
+  .footer-inner a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<main>
+  <a class="home" href="/">&larr; lumber.bid</a>
+  <h1>Is that log worth anything<span class="dot">?</span></h1>
+  <p class="lede">
+    Board feet, sawlog grade, and an honest dollar band — from species, small-end
+    diameter and length. Bands, never false precision: a log's real price is set
+    by the buyer who inspects it, which is exactly why good lots sell by sealed bid.
+  </p>
+
+  <form id="est-form" class="card">
+    <h2>The log</h2>
+    <div class="grid">
+      <div>
+        <label class="f" for="est-species">Species</label>
+        <select id="est-species">
+          <option value="black walnut" selected>Black walnut</option>
+          <option value="white oak">White oak</option>
+          <option value="cherry">Cherry</option>
+          <option value="hard maple">Hard maple</option>
+          <option value="red oak">Red oak</option>
+          <option value="ash">Ash</option>
+          <option value="hickory">Hickory</option>
+          <option value="soft maple">Soft maple</option>
+          <option value="birch">Birch</option>
+          <option value="poplar">Poplar</option>
+          <option value="sycamore">Sycamore</option>
+          <option value="pine">Pine</option>
+          <option value="spruce">Spruce</option>
+          <option value="fir">Fir</option>
+          <option value="cottonwood">Cottonwood</option>
+          <option value="other">Other / not sure</option>
+        </select>
+      </div>
+      <div>
+        <label class="f" for="est-diameter">Small-end diameter (inches, inside bark)</label>
+        <input id="est-diameter" type="number" min="1" max="80" step="1" value="24" inputmode="numeric">
+      </div>
+      <div>
+        <label class="f" for="est-length">Merchantable length (feet)</label>
+        <input id="est-length" type="number" min="1" max="60" step="1" value="12" inputmode="numeric">
+      </div>
+      <div>
+        <label class="f">Log rule</label>
+        <div class="opts">
+          <label><input type="radio" name="rule" value="doyle" checked> Doyle (Eastern norm)</label>
+          <label><input type="radio" name="rule" value="international"> International ¼″</label>
+        </div>
+      </div>
+      <div class="full">
+        <label class="f">Condition</label>
+        <div class="opts">
+          <label><input type="checkbox" id="est-clear" checked> Clear faces (few knots)</label>
+          <label><input type="radio" name="defects" value="0" checked> Clean</label>
+          <label><input type="radio" name="defects" value="1"> Some sweep/knots</label>
+          <label><input type="radio" name="defects" value="2"> Heavy defects</label>
+          <label><input type="checkbox" id="est-metal"> Possible metal (yard/fence tree)</label>
+        </div>
+      </div>
+      <div>
+        <label class="f">Selling</label>
+        <div class="opts">
+          <label><input type="radio" name="where" value="standing" checked> Standing / at the stump</label>
+          <label><input type="radio" name="where" value="delivered"> Delivered to mill</label>
+        </div>
+      </div>
+      <div>
+        <label class="f">Access</label>
+        <div class="opts">
+          <label><input type="radio" name="difficulty" value="0.15"> Open field</label>
+          <label><input type="radio" name="difficulty" value="0.3" checked> Typical</label>
+          <label><input type="radio" name="difficulty" value="0.6"> Tight / urban</label>
+          <label><input type="radio" name="difficulty" value="0.9"> Rigging or crane</label>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div id="est-result" class="card" hidden aria-live="polite"></div>
+
+  <div class="card">
+    <h2>What to do with a good number</h2>
+    <p>
+      A high-grade log — walnut and white oak especially — is worth a competing
+      market, not one buyer's offer. That is what this domain is being built for:
+      sealed timber bids on the timber.bid funded rail. It isn&rsquo;t open yet;
+      the <a href="/">waitlist on the front page</a> gets one email when it is.
+    </p>
+    <a class="cta" href="/#waitlist-form">Get the one email &rarr;</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace</p>
+    <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
+    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
+  </div>
+</footer>
+
+<script src="/log-model.js" defer></script>
+<script src="/estimate.js" defer></script>
+</body>
+</html>
