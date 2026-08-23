@@ -15,6 +15,12 @@ bands are computed client-side in `site/log-model.js`. The fn's header names
 this page as its counterpart — change the response contract in both places or
 neither.
 
+Two more read-only backend touches since 2026-08-23: `/leaderboard` calls the
+`lumber_leaderboard()` RPC as anon (counterpart: the migration's self-test pins
+the shape `site/leaderboard.js` depends on), and every page's `og:image` points
+at `og-image?type=lumber_leaderboard`, which renders the live record card
+(5-minute cache). Still zero writes beyond the waitlist.
+
 The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
 Read it before building anything here.
