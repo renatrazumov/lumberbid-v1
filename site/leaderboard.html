@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The most expensive wood ever sold — lumber.bid leaderboard</title>
+
+<meta name="description" content="The public leaderboard of the most expensive wood sold at auction on lumber.bid — walnut burls, figured maple, rare species and standing timber. Live auctions, real hammer prices, every bid public.">
+<link rel="canonical" href="https://lumber.bid/leaderboard">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="The most expensive wood ever sold — lumber.bid leaderboard">
+<meta property="og:description" content="Real hammer prices. Live public auctions. The record is there to be beaten.">
+<meta property="og:url" content="https://lumber.bid/leaderboard">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
+
+<style>
+  /* lumber.bid's own forest-green look (same tokens as the homepage), with
+     AMBER for every dollar figure — money is amber, per the house palette. */
+  :root {
+    --brand: #6FBF73; --bg: #10140f; --surface: #171d16; --border: #2a332a;
+    --text: #eaf0e9; --muted: #9aa89c; --money: #F59E0B; --money-soft: #3a2a0a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh;
+  }
+  main { flex: 1; width: 100%; max-width: 52rem; margin: 0 auto; padding: 1.25rem 1.5rem 3rem; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 0 1.5rem; }
+  .brand { font-weight: 800; font-size: 1.3rem; color: var(--brand); text-decoration: none; }
+  .brand .dot { color: var(--text); }
+  .nav a { color: var(--muted); text-decoration: none; font-size: .9rem; margin-left: 1.1rem; }
+  .nav a:hover { color: var(--brand); }
+
+  .pulse { display: inline-flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .4rem .9rem; font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .pulse .live { color: var(--brand); font-weight: 700; }
+  .pulse .live::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); margin-right: .4rem; box-shadow: 0 0 0 0 rgba(111,191,115,.6); animation: ping 1.8s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(111,191,115,.6); } 70% { box-shadow: 0 0 0 8px rgba(111,191,115,0); } 100% { box-shadow: 0 0 0 0 rgba(111,191,115,0); } }
+
+  .hero { text-align: center; padding: .5rem 0 1.75rem; }
+  .hero .eyebrow { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .hero .record { font-size: clamp(3rem, 12vw, 5.5rem); font-weight: 900; line-height: 1; color: var(--money); letter-spacing: -.03em; margin: .35rem 0 .25rem; }
+  .hero .what { font-size: clamp(1.05rem, 3vw, 1.35rem); color: var(--text); }
+  .hero .what strong { text-transform: capitalize; }
+  .hero .when { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
+  .hero .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; margin-top: 1.25rem; }
+  a.cta { display: inline-flex; align-items: center; gap: .5rem; background: var(--money); color: #1a1100; text-decoration: none; font-weight: 800; padding: .85rem 1.4rem; border-radius: 10px; }
+  a.cta.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); font-weight: 700; }
+  a.cta:hover { filter: brightness(1.08); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; margin: 0 0 2rem; }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: .85rem 1rem; text-align: center; }
+  .stat .n { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+  .stat .n.money { color: var(--money); }
+  .stat .l { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+  h2 { font-size: 1.05rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 1.75rem 0 .85rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: .75rem; }
+  .card.empty { color: var(--muted); text-align: center; padding: 1.6rem; }
+  .row { display: flex; align-items: center; gap: 1rem; }
+  .rank { flex: 0 0 2.6rem; height: 2.6rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; background: var(--border); color: var(--text); }
+  .rank.one { background: var(--money); color: #1a1100; }
+  .card.one { border-color: var(--money); background: var(--money-soft); }
+  .info { flex: 1; min-width: 0; }
+  .info .t { font-weight: 800; }
+  .info .t .sp { text-transform: capitalize; color: var(--brand); }
+  .info .m { font-size: .85rem; color: var(--muted); }
+  .price { font-weight: 900; color: var(--money); font-size: 1.15rem; white-space: nowrap; }
+  .live-card .price { font-size: 1.05rem; }
+  .ends { font-size: .8rem; color: var(--muted); }
+  .ends.soon { color: var(--money); font-weight: 700; }
+  a.bid { display: inline-block; margin-top: .5rem; color: var(--brand); font-weight: 700; text-decoration: none; font-size: .9rem; }
+
+  .share { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1.75rem; }
+  .share a, .share button { font: inherit; font-size: .9rem; font-weight: 700; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .5rem 1rem; text-decoration: none; cursor: pointer; }
+  .share a:hover, .share button:hover { border-color: var(--brand); }
+  .fine { font-size: .78rem; color: var(--muted); margin-top: 1.25rem; }
+  footer { border-top: 1px solid var(--border); padding: 1.75rem 1.5rem 2.5rem; }
+  .footer-inner { max-width: 52rem; margin: 0 auto; font-size: .8rem; color: var(--muted); }
+  .footer-inner p { margin: 0 0 .4rem; }
+  .footer-inner a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="head">
+    <a class="brand" href="/">lumber<span class="dot">.</span>bid</a>
+    <nav class="nav">
+      <a href="/estimate">Estimator</a>
+      <a href="https://timber.bid/lumber">Lots</a>
+      <a href="/#waitlist-form">Waitlist</a>
+    </nav>
+  </div>
+
+  <div class="pulse" id="pulse"><span class="live">LIVE BOARD</span><span id="pulse-text">loading…</span></div>
+
+  <section class="hero" id="hero">
+    <div class="eyebrow">The most expensive wood ever sold here</div>
+    <div class="record" id="record-amt">$0</div>
+    <div class="what" id="record-what">The record is unclaimed.</div>
+    <div class="when" id="record-when">Every price on this board is a real hammer price — no hype math, no paid placement.</div>
+    <div class="ctas">
+      <a class="cta" href="https://timber.bid/lumber/post">Post a piece &rarr;</a>
+      <a class="cta ghost" href="#live">See what&rsquo;s live</a>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-live">–</div><div class="l">live auctions</div></div>
+    <div class="stat"><div class="n" id="s-sealed">–</div><div class="l">sealed lots open</div></div>
+    <div class="stat"><div class="n" id="s-sold">–</div><div class="l">pieces sold</div></div>
+    <div class="stat"><div class="n money" id="s-total">–</div><div class="l">total hammer</div></div>
+  </div>
+
+  <h2 id="live">Live now — public auctions</h2>
+  <div id="live-list"><div class="card empty">Loading live auctions…</div></div>
+
+  <h2>The leaderboard — highest hammer prices</h2>
+  <div id="board"><div class="card empty">Loading the board…</div></div>
+
+  <div class="share">
+    <span style="color:var(--muted);font-size:.9rem">Share the board:</span>
+    <a id="share-x" href="https://twitter.com/intent/tweet?text=The%20most%20expensive%20wood%20ever%20sold%20at%20auction%20%E2%80%94%20live%20leaderboard&url=https%3A%2F%2Flumber.bid%2Fleaderboard" target="_blank" rel="noopener">Post on X</a>
+    <button type="button" id="copy-link">Copy link</button>
+    <span id="copy-status" style="color:var(--brand);font-size:.85rem"></span>
+  </div>
+
+  <p class="fine">
+    How this board works: sealed timber lots publish their full bid sheet after
+    close; public auctions show every bid live. A sale lands here only when the
+    winner has actually been charged. Nothing is ranked for money — the only way
+    up the board is to pay more for wood.
+  </p>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
+    <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
+    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
+  </div>
+</footer>
+
+<script src="/leaderboard.js" defer></script>
+</body>
+</html>
