@@ -165,7 +165,7 @@
   .steps { margin: 0; padding-left: 1.3rem; }
   .steps li { margin-bottom: .7rem; }
   .steps li:last-child { margin-bottom: 0; }
-  .card a { color: var(--brand); }
+  .card a:not(.cta) { color: var(--brand); } /* :not(.cta): equal specificity, later in the sheet - without it a card CTA renders brand-on-brand, i.e. invisible */
 
   footer {
     border-top: 1px solid var(--border);
