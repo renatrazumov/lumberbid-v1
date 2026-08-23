@@ -3,18 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The most expensive wood ever sold — lumber.bid leaderboard</title>
+<title>The most expensive wood ever sold — lumber.bid</title>
 
-<meta name="description" content="The public leaderboard of the most expensive wood sold at auction on lumber.bid — walnut burls, figured maple, rare species and standing timber. Live auctions, real hammer prices, every bid public.">
+<meta name="description" content="The live leaderboard of the most expensive wood sold at auction — walnut burls, figured maple, rare species, standing timber. Real hammer prices, every bid public, nothing ranked for money.">
 <link rel="canonical" href="https://lumber.bid/leaderboard">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="The most expensive wood ever sold — lumber.bid leaderboard">
+<meta property="og:title" content="The most expensive wood ever sold — lumber.bid">
 <meta property="og:description" content="Real hammer prices. Live public auctions. The record is there to be beaten.">
 <meta property="og:url" content="https://lumber.bid/leaderboard">
-<!-- The share card is LIVE: timberbid-v1's og-image fn renders the current
-     record from lumber_leaderboard() (5-min cache). Shares always show the
-     number that is true right now - the record, or "unclaimed". -->
+<!-- Live share card: og-image renders the CURRENT record (5-min cache), so a
+     share always shows the number that is true right now. -->
 <meta property="og:image" content="https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/og-image?type=lumber_leaderboard">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,98 +23,186 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
 
 <style>
-  /* lumber.bid's own forest-green look (same tokens as the homepage), with
-     AMBER for every dollar figure — money is amber, per the house palette. */
+  /* lumber.bid's forest green, fixed for everyone. AMBER is money — every
+     dollar figure on this page, per the house palette. */
   :root {
-    --brand: #6FBF73; --bg: #10140f; --surface: #171d16; --border: #2a332a;
-    --text: #eaf0e9; --muted: #9aa89c; --money: #F59E0B; --money-soft: #3a2a0a;
+    --brand: #6FBF73; --brand-dim: #4e8f52;
+    --bg: #0d110c; --surface: #161c15; --surface-2: #1c241b; --border: #2a332a;
+    --text: #eaf0e9; --muted: #96a597;
+    --money: #F59E0B; --money-soft: #3a2a0a; --money-dim: #b97d09;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
     background: var(--bg); color: var(--text);
     font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
-  main { flex: 1; width: 100%; max-width: 52rem; margin: 0 auto; padding: 1.25rem 1.5rem 3rem; }
-  .head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 0 1.5rem; }
-  .brand { font-weight: 800; font-size: 1.3rem; color: var(--brand); text-decoration: none; }
-  .brand .dot { color: var(--text); }
-  .nav a { color: var(--muted); text-decoration: none; font-size: .9rem; margin-left: 1.1rem; }
-  .nav a:hover { color: var(--brand); }
+  .wrap { width: 100%; max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
 
-  .pulse { display: inline-flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .4rem .9rem; font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
-  .pulse .live { color: var(--brand); font-weight: 700; }
-  .pulse .live::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); margin-right: .4rem; box-shadow: 0 0 0 0 rgba(111,191,115,.6); animation: ping 1.8s infinite; }
-  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(111,191,115,.6); } 70% { box-shadow: 0 0 0 8px rgba(111,191,115,0); } 100% { box-shadow: 0 0 0 0 rgba(111,191,115,0); } }
+  /* ── sticky nav ─────────────────────────────────────────────────────── */
+  header.nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(13,17,12,.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 60px; }
+  .logo { display: inline-flex; align-items: center; gap: .5rem; font-weight: 800; font-size: 1.2rem; color: var(--text); text-decoration: none; }
+  .logo .mark { width: 26px; height: 26px; border-radius: 7px; background: var(--brand); display: inline-flex; align-items: center; justify-content: center; }
+  .logo .mark svg { width: 16px; height: 16px; }
+  .logo .dot { color: var(--brand); }
+  .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: .92rem; font-weight: 600; }
+  .nav-links a:hover { color: var(--brand); }
+  @media (max-width: 620px) { .nav-links a.hide-s { display: none; } }
 
-  .hero { text-align: center; padding: .5rem 0 1.75rem; }
-  .hero .eyebrow { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-  .hero .record { font-size: clamp(3rem, 12vw, 5.5rem); font-weight: 900; line-height: 1; color: var(--money); letter-spacing: -.03em; margin: .35rem 0 .25rem; }
-  .hero .what { font-size: clamp(1.05rem, 3vw, 1.35rem); color: var(--text); }
-  .hero .what strong { text-transform: capitalize; }
-  .hero .when { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
-  .hero .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; margin-top: 1.25rem; }
-  a.cta { display: inline-flex; align-items: center; gap: .5rem; background: var(--money); color: #1a1100; text-decoration: none; font-weight: 800; padding: .85rem 1.4rem; border-radius: 10px; }
-  a.cta.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); font-weight: 700; }
-  a.cta:hover { filter: brightness(1.08); }
+  /* ── status pill: REAL numbers only ─────────────────────────────────── */
+  .pill-row { display: flex; justify-content: center; padding: 1.5rem 0 0; }
+  .pill {
+    display: inline-flex; align-items: center; gap: .55rem; flex-wrap: wrap; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: .45rem 1.1rem; font-size: .86rem; color: var(--muted);
+  }
+  .pill b { color: var(--brand); font-weight: 700; }
+  .pill .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 0 rgba(111,191,115,.6); animation: ping 2s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(111,191,115,.55); } 70% { box-shadow: 0 0 0 9px rgba(111,191,115,0); } 100% { box-shadow: 0 0 0 0 rgba(111,191,115,0); } }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; margin: 0 0 2rem; }
-  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: .85rem 1rem; text-align: center; }
-  .stat .n { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+  /* ── hero ───────────────────────────────────────────────────────────── */
+  .hero { text-align: center; padding: 1.75rem 0 2rem; }
+  .hero h1 { font-size: clamp(1.9rem, 5.5vw, 3rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 .4rem; }
+  .hero h1 .amt { color: var(--money); }
+  .hero .sub { color: var(--muted); max-width: 40rem; margin: .5rem auto 0; }
+  .hero .sub b { color: var(--text); }
+  .hero .what { margin-top: .9rem; font-size: 1.05rem; }
+  .hero .what .sp { color: var(--brand); font-weight: 700; text-transform: capitalize; }
+  .hero .when { color: var(--muted); font-size: .88rem; margin-top: .2rem; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.4rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem; border-radius: 10px;
+    font-weight: 800; text-decoration: none; padding: .85rem 1.5rem; font-size: 1rem; border: 0; cursor: pointer;
+  }
+  .btn.primary { background: var(--money); color: #1a1100; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand-dim); }
+  .btn.ghost:hover { background: rgba(111,191,115,.1); }
+
+  /* ── stats ──────────────────────────────────────────────────────────── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .65rem; margin: 1.75rem 0 0; }
+  @media (max-width: 620px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: .8rem .6rem; text-align: center; }
+  .stat .n { font-size: 1.45rem; font-weight: 800; line-height: 1.2; }
   .stat .n.money { color: var(--money); }
-  .stat .l { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .stat .l { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
 
-  h2 { font-size: 1.05rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 1.75rem 0 .85rem; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: .75rem; }
-  .card.empty { color: var(--muted); text-align: center; padding: 1.6rem; }
-  .row { display: flex; align-items: center; gap: 1rem; }
-  .rank { flex: 0 0 2.6rem; height: 2.6rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; background: var(--border); color: var(--text); }
-  .rank.one { background: var(--money); color: #1a1100; }
-  .card.one { border-color: var(--money); background: var(--money-soft); }
-  .info { flex: 1; min-width: 0; }
-  .info .t { font-weight: 800; }
-  .info .t .sp { text-transform: capitalize; color: var(--brand); }
-  .info .m { font-size: .85rem; color: var(--muted); }
-  .price { font-weight: 900; color: var(--money); font-size: 1.15rem; white-space: nowrap; }
-  .live-card .price { font-size: 1.05rem; }
-  .ends { font-size: .8rem; color: var(--muted); }
-  .ends.soon { color: var(--money); font-weight: 700; }
-  a.bid { display: inline-block; margin-top: .5rem; color: var(--brand); font-weight: 700; text-decoration: none; font-size: .9rem; }
+  /* ── category chips ─────────────────────────────────────────────────── */
+  .chips { display: flex; gap: .5rem; overflow-x: auto; padding: 1.75rem 0 .25rem; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 999px; padding: .5rem 1rem; font-size: .88rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap; font-family: inherit;
+  }
+  .chip:hover { color: var(--text); border-color: var(--brand-dim); }
+  .chip.on { background: var(--brand); border-color: var(--brand); color: #0d1a0e; }
+  .chip .ct { opacity: .65; font-weight: 600; }
 
-  .share { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1.75rem; }
-  .share a, .share button { font: inherit; font-size: .9rem; font-weight: 700; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .5rem 1rem; text-decoration: none; cursor: pointer; }
-  .share a:hover, .share button:hover { border-color: var(--brand); }
-  .fine { font-size: .78rem; color: var(--muted); margin-top: 1.25rem; }
-  footer { border-top: 1px solid var(--border); padding: 1.75rem 1.5rem 2.5rem; }
-  .footer-inner { max-width: 52rem; margin: 0 auto; font-size: .8rem; color: var(--muted); }
-  .footer-inner p { margin: 0 0 .4rem; }
-  .footer-inner a { color: var(--muted); }
+  /* ── section headings ───────────────────────────────────────────────── */
+  h2.sec { font-size: .82rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 2rem 0 .8rem; display: flex; align-items: center; gap: .5rem; }
+
+  /* ── lot rows ───────────────────────────────────────────────────────── */
+  .lot {
+    display: flex; align-items: center; gap: .95rem; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: .95rem 1.1rem; margin-bottom: .6rem; transition: border-color .15s, transform .06s;
+  }
+  .lot:hover { border-color: var(--brand-dim); transform: translateY(-1px); }
+  .lot.one { border-color: var(--money); background: linear-gradient(90deg, var(--money-soft), var(--surface) 55%); }
+  .lot.livecard { border-color: var(--brand-dim); }
+  .rank { flex: 0 0 2.5rem; height: 2.5rem; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: .95rem; }
+  .lot.one .rank { background: var(--money); border-color: var(--money); color: #1a1100; }
+  .lot .body { flex: 1; min-width: 0; }
+  .lot .t { font-weight: 800; font-size: 1rem; line-height: 1.3; }
+  .lot .t .sp { color: var(--brand); text-transform: capitalize; }
+  .lot .m { font-size: .82rem; color: var(--muted); margin-top: .15rem; }
+  .lot .m .tag { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 0 .5rem; margin-right: .35rem; font-size: .75rem; }
+  .lot .right { text-align: right; white-space: nowrap; }
+  .lot .price { font-weight: 900; color: var(--money); font-size: 1.1rem; }
+  .lot .ends { font-size: .78rem; color: var(--muted); }
+  .lot .ends.soon { color: var(--money); font-weight: 800; }
+
+  /* ── activity ticker ────────────────────────────────────────────────── */
+  .feed { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1.1rem; }
+  .feed-row { display: flex; align-items: center; gap: .7rem; padding: .45rem 0; border-bottom: 1px dashed var(--border); font-size: .9rem; }
+  .feed-row:last-child { border-bottom: 0; }
+  .feed-row .ico { flex: 0 0 auto; width: 22px; text-align: center; }
+  .feed-row .txt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed-row .txt a { color: inherit; text-decoration: none; }
+  .feed-row .txt a:hover { color: var(--brand); }
+  .feed-row .amt { font-weight: 800; color: var(--money); white-space: nowrap; }
+  .feed-row .ago { color: var(--muted); font-size: .78rem; white-space: nowrap; min-width: 4.2rem; text-align: right; }
+
+  .empty { background: var(--surface); border: 1px dashed var(--border); border-radius: 14px; padding: 1.5rem; text-align: center; color: var(--muted); }
+  .empty a { color: var(--brand); font-weight: 700; }
+
+  /* ── share + rules ──────────────────────────────────────────────────── */
+  .share { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; margin: 1.5rem 0 0; }
+  .share span.lab { color: var(--muted); font-size: .88rem; }
+  .share a, .share button {
+    font: inherit; font-size: .87rem; font-weight: 700; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: .45rem 1rem; text-decoration: none; cursor: pointer;
+  }
+  .share a:hover, .share button:hover { border-color: var(--brand); color: var(--brand); }
+  #copied { color: var(--brand); font-size: .85rem; font-weight: 700; }
+
+  .rules { margin: 2.25rem 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.4rem; }
+  .rules h3 { margin: 0 0 .6rem; font-size: .82rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  .rules ol { margin: 0; padding-left: 1.15rem; color: var(--text); }
+  .rules li { margin-bottom: .5rem; }
+  .rules li:last-child { margin-bottom: 0; }
+  .rules b { color: var(--brand); }
+
+  footer { border-top: 1px solid var(--border); margin-top: 2.5rem; padding: 1.75rem 0 2.5rem; }
+  .foot { font-size: .8rem; color: var(--muted); }
+  .foot p { margin: 0 0 .4rem; }
+  .foot a { color: var(--muted); }
 </style>
 </head>
 <body>
 
-<main>
-  <div class="head">
-    <a class="brand" href="/">lumber<span class="dot">.</span>bid</a>
-    <nav class="nav">
-      <a href="/estimate">Estimator</a>
-      <a href="https://timber.bid/lumber">Lots</a>
-      <a href="/#waitlist-form">Waitlist</a>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="/">
+      <span class="mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5l8 13H8z" fill="#0d1a0e"/><rect x="14.5" y="17" width="3" height="9" fill="#0d1a0e"/></svg></span>
+      lumber<span class="dot">.bid</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#board">Leaderboard</a>
+      <a href="#live" class="hide-s">Live</a>
+      <a href="/estimate" class="hide-s">Estimator</a>
+      <a href="#rules">Rules</a>
     </nav>
   </div>
+</header>
 
-  <div class="pulse" id="pulse"><span class="live">LIVE BOARD</span><span id="pulse-text">loading…</span></div>
+<div class="wrap">
+  <div class="pill-row">
+    <div class="pill" id="pill"><span class="live-dot"></span><span id="pill-text">loading the board…</span></div>
+  </div>
 
-  <section class="hero" id="hero">
-    <div class="eyebrow">The most expensive wood ever sold here</div>
-    <div class="record" id="record-amt">$0</div>
-    <div class="what" id="record-what">The record is unclaimed.</div>
-    <div class="when" id="record-when">Every price on this board is a real hammer price — no hype math, no paid placement.</div>
-    <div class="ctas">
-      <a class="cta" href="https://timber.bid/lumber/post">Post a piece &rarr;</a>
-      <a class="cta ghost" href="#live">See what&rsquo;s live</a>
+  <section class="hero">
+    <h1>Most expensive wood sold: <span class="amt" id="record-amt">—</span></h1>
+    <div class="what" id="record-what">Loading…</div>
+    <div class="when" id="record-when"></div>
+    <p class="sub">
+      Real hammer prices from real auctions. <b>Nothing here is ranked for money</b>
+      — except the money someone actually paid for wood. Only the winner pays.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="https://timber.bid/lumber/post">Post a piece &rarr;</a>
+      <a class="btn ghost" href="#live">See what&rsquo;s live</a>
     </div>
   </section>
 
@@ -126,32 +213,41 @@
     <div class="stat"><div class="n money" id="s-total">–</div><div class="l">total hammer</div></div>
   </div>
 
-  <h2 id="live">Live now — public auctions</h2>
-  <div id="live-list"><div class="card empty">Loading live auctions…</div></div>
+  <div class="chips" id="chips"></div>
 
-  <h2>The leaderboard — highest hammer prices</h2>
-  <div id="board"><div class="card empty">Loading the board…</div></div>
+  <h2 class="sec" id="live">Live now — public auctions</h2>
+  <div id="live-list"><div class="empty">Loading…</div></div>
+
+  <h2 class="sec" id="board">The leaderboard — highest hammer prices</h2>
+  <div id="board-list"><div class="empty">Loading…</div></div>
+
+  <h2 class="sec">Latest activity</h2>
+  <div class="feed" id="feed"><div style="color:var(--muted);font-size:.9rem">Loading…</div></div>
 
   <div class="share">
-    <span style="color:var(--muted);font-size:.9rem">Share the board:</span>
-    <a id="share-x" href="https://twitter.com/intent/tweet?text=The%20most%20expensive%20wood%20ever%20sold%20at%20auction%20%E2%80%94%20live%20leaderboard&url=https%3A%2F%2Flumber.bid%2Fleaderboard" target="_blank" rel="noopener">Post on X</a>
+    <span class="lab">Share the board:</span>
+    <a id="share-x" href="#" target="_blank" rel="noopener">Post on X</a>
     <button type="button" id="copy-link">Copy link</button>
-    <span id="copy-status" style="color:var(--brand);font-size:.85rem"></span>
+    <span id="copied"></span>
   </div>
 
-  <p class="fine">
-    How this board works: sealed timber lots publish their full bid sheet after
-    close; public auctions show every bid live. A sale lands here only when the
-    winner has actually been charged. Nothing is ranked for money — the only way
-    up the board is to pay more for wood.
-  </p>
-</main>
+  <section class="rules" id="rules">
+    <h3>The rules</h3>
+    <ol>
+      <li><b>Only the winner pays.</b> Bidding is free and costs nothing if you lose. This is an auction for wood, not for rank — there is no way to buy a position on this board.</li>
+      <li><b>Two formats.</b> Rare and figured pieces sell by <b>public auction</b> — every bid visible as it lands, a bid in the last 2 minutes extends the clock. Logs and standing timber sell by <b>sealed bid</b> — nobody sees a number until close, then the entire bid sheet is published.</li>
+      <li><b>Provenance is required</b> for public auctions: where the wood grew and how it was acquired, plus a declaration that it is legally harvested, not a CITES Appendix&nbsp;I species, with any Appendix&nbsp;II permits named. Lacey Act and CITES apply to wood exactly as they do to ivory.</li>
+      <li><b>Metal must be disclosed.</b> Yard and fence-line trees carry nails. Saying so does not kill a sale; hiding it kills the next ten.</li>
+      <li><b>A sale reaches this board only when the winner has actually been charged</b>, through the same escrow rail timber.bid runs for every other job.</li>
+    </ol>
+  </section>
+</div>
 
 <footer>
-  <div class="footer-inner">
+  <div class="wrap foot">
     <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
     <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
-    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
+    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a> &middot; <a href="/">lumber.bid</a></p>
   </div>
 </footer>
 
