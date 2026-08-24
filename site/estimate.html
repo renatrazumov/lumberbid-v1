@@ -136,6 +136,27 @@
 
   <div id="est-result" class="card" hidden aria-live="polite"></div>
 
+  <!-- Appears once a band has rendered. The ask is deliberately the WAITLIST
+       ask, not a buyer promise: no auction is open and there is no buyer pool
+       yet, and the honesty rule (docs/lumber.md) binds every word on this site.
+       Writes role 'interested' / source 'lumber.bid' — the same row waitlist.js
+       creates — but through estimate-log, so the email is attached to the log
+       it is about instead of floating in a list of its own. -->
+  <div id="est-lead" class="card" hidden style="margin-top:1.25rem">
+    <h2>Tell me when a log like this can sell</h2>
+    <p>
+      No auction is open yet, and the first sales are broker-run while the buyer
+      side is seeded. Leave an email and you&rsquo;ll hear when sealed lots open
+      near you &mdash; nothing else.
+    </p>
+    <form id="est-lead-form" class="wl-form">
+      <input id="est-lead-email" type="email" required placeholder="you@example.com"
+             autocomplete="email" aria-label="Your email">
+      <button type="submit" class="cta-big" id="est-lead-submit">Keep me posted</button>
+    </form>
+    <p class="wl-status" id="est-lead-status" role="status"></p>
+  </div>
+
   <div class="card">
     <h2>What &ldquo;honest&rdquo; means here</h2>
     <ul class="trust">

@@ -150,5 +150,12 @@
     };
   }
 
-  return { boardFeet: boardFeet, speciesValue: speciesValue, gradeLog: gradeLog, valueLog: valueLog, SPECIES: SPECIES };
+  // Bump on ANY change to the species table, log rules, grade thresholds or
+  // multipliers. Same discipline as PROMPT_VERSION in estimate-log and
+  // ENGINE_VERSION in pricingEngine.ts: a band recorded in log_estimates is
+  // only interpretable if you know which price table produced it, and "our
+  // numbers changed" must stay distinguishable from "the market moved".
+  var VERSION = '2026-08-21-appalachian-doyle';
+
+  return { boardFeet: boardFeet, speciesValue: speciesValue, gradeLog: gradeLog, valueLog: valueLog, SPECIES: SPECIES, VERSION: VERSION };
 }));

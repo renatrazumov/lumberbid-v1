@@ -78,6 +78,9 @@
 
   // --- Photo mode --------------------------------------------------------
   var FN_URL = 'https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/estimate-log';
+  // Set when a photo estimate returns one. Null means "no AI reading exists for
+  // what is on screen", which gates every write below.
+  var lastEstimateId = null;
   var shotsWrap = document.getElementById('shots');
   var fileInput = document.getElementById('shot-file');
   var goBtn = document.getElementById('est-photo-go');
@@ -201,11 +204,136 @@
       .then(function (r) {
         if (!r.ok) { say(r.j && r.j.error ? r.j.error : 'Could not read the photo — try again.', false); return; }
         if (!r.j.log_detected) { say(r.j.reject_reason || 'No log visible in that photo — try another angle.', false); return; }
+        // Older deploys of estimate-log do not return an id; everything below
+        // is a no-op in that case, by design.
+        lastEstimateId = typeof r.j.estimate_id === 'string' ? r.j.estimate_id : null;
         applyFacts(r.j);
+        scheduleConfirmation();
       })
       .catch(function () { say('Network problem — check your connection and try again.', false); })
       .finally(function () { goBtn.disabled = false; refreshCta(); });
   });
 
   refreshCta();
+
+  // --- Sending back what the human actually decided -----------------------
+  //
+  // COUNTERPART: timberbid-v1:supabase/functions/estimate-log (confirm shape).
+  // Change one, change the other.
+  //
+  // The AI reads the log; the seller then corrects it — and the corrected
+  // numbers are worth more than the reading. They are a human-verified label on
+  // a physical measurement, which is what tells us whether the model's diameter
+  // is trustworthy, whether the scale-object advice actually helps, and where
+  // the band should move. Until 2026-08-24 all of it died with the tab.
+  //
+  // Three rules this obeys:
+  //   1. FIRE AND FORGET. A telemetry write must never cost a seller their
+  //      estimate, so every failure is swallowed and nothing here touches the
+  //      rendered band.
+  //   2. DEBOUNCED. render() runs on every keystroke; corrections are sent
+  //      only once the numbers have been still for a moment, and only when
+  //      they actually changed.
+  //   3. ONLY AFTER A PHOTO. Typing into the manual calculator produces no
+  //      estimate_id and sends nothing — there is no AI reading to compare a
+  //      correction against, so the row would carry a label with no subject.
+  var CONFIRM_DEBOUNCE_MS = 2500;
+  var lastSentSignature = '';
+  var confirmTimer = null;
+
+  function currentConfirmation() {
+    var input = read();
+    if (input.smallEndDiameterIn <= 0 || input.lengthFt <= 0) return null;
+    var v = M.valueLog(input);
+    // A firewood-route log has no value band; record the facts, not a fake band.
+    var band = v.route === 'lumber' ? v.netValueBand : null;
+    return {
+      confirmed: {
+        species: document.getElementById('est-species').value,
+        small_end_diameter_in: input.smallEndDiameterIn,
+        length_ft: input.lengthFt,
+        clear_faces: input.clear,
+        defects: input.defects,
+        metal: input.metalSuspected
+      },
+      band: {
+        low: band ? band.low : null,
+        high: band ? band.high : null,
+        board_feet: v.boardFeet,
+        log_rule: input.rule,
+        valuation_version: M.VERSION || null
+      }
+    };
+  }
+
+  function sendConfirmation(email, onDone) {
+    if (!lastEstimateId) { if (onDone) onDone(false); return; }
+    var payload = currentConfirmation();
+    if (!payload) { if (onDone) onDone(false); return; }
+    var signature = JSON.stringify(payload) + '|' + (email || '');
+    if (!email && signature === lastSentSignature) { if (onDone) onDone(true); return; }
+    lastSentSignature = signature;
+    payload.estimate_id = lastEstimateId;
+    if (email) payload.email = email;
+    fetch(FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { if (onDone) onDone(res.ok); })
+      .catch(function () { if (onDone) onDone(false); });
+  }
+
+  function scheduleConfirmation() {
+    if (!lastEstimateId) return;
+    if (confirmTimer) clearTimeout(confirmTimer);
+    confirmTimer = setTimeout(function () { sendConfirmation(null, null); }, CONFIRM_DEBOUNCE_MS);
+  }
+
+  form.addEventListener('input', scheduleConfirmation);
+
+  // --- The email ask ------------------------------------------------------
+  // Shown only once a band exists, because before that there is nothing to be
+  // told about. Deliberately the waitlist ask and not a buyer promise — no
+  // auction is open (honesty rule).
+  var leadBox = document.getElementById('est-lead');
+  var leadForm = document.getElementById('est-lead-form');
+  var leadEmail = document.getElementById('est-lead-email');
+  var leadBtn = document.getElementById('est-lead-submit');
+  var leadStatus = document.getElementById('est-lead-status');
+
+  if (leadBox && leadForm) {
+    // The result card is the trigger: if a band is on screen, so is the ask.
+    var revealLead = function () {
+      if (!out.hidden) leadBox.hidden = false;
+    };
+    form.addEventListener('input', revealLead);
+    revealLead();
+
+    leadForm.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var value = (leadEmail.value || '').trim();
+      if (!value) return;
+      leadBtn.disabled = true;
+      leadStatus.textContent = 'Saving…';
+      // No estimate_id means the visitor never ran a photo estimate. Their
+      // interest is still real, so fall back to the site's own waitlist write
+      // rather than dropping it.
+      if (!lastEstimateId && typeof window.lumberWaitlistSubmit === 'function') {
+        window.lumberWaitlistSubmit(value, 'lumber: estimate page (manual)', function (ok) {
+          leadBtn.disabled = false;
+          leadStatus.textContent = ok
+            ? "You're on the list — you'll hear when sealed lots open near you."
+            : 'That did not save. Try again in a moment.';
+        });
+        return;
+      }
+      sendConfirmation(value, function (ok) {
+        leadBtn.disabled = false;
+        leadStatus.textContent = ok
+          ? "You're on the list — you'll hear when sealed lots open near you."
+          : 'That did not save. Try again in a moment.';
+      });
+    });
+  }
 })();

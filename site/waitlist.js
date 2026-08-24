@@ -28,6 +28,48 @@
   var ANON_KEY =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1enFlem9oa3Fnc2JieHl6dnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3MzY0NTIsImV4cCI6MjA1NTMxMjQ1Mn0.9UurHgUQk4xLJHapaK8e5qYPq1vV09tsqSoWCXbhmj8';
 
+  /**
+   * The one place this repo writes wood_delivery_waitlist.
+   * Resolves true when the row exists (409 = already on the list = on the list).
+   */
+  function postWaitlist(body) {
+    return fetch(SUPABASE_URL + '/rest/v1/wood_delivery_waitlist', {
+      method: 'POST',
+      headers: {
+        apikey: ANON_KEY,
+        Authorization: 'Bearer ' + ANON_KEY,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal', // anon has no SELECT — never ask for RETURNING
+      },
+      body: JSON.stringify(body),
+    }).then(function (res) { return res.ok || res.status === 409; });
+  }
+
+  /**
+   * Exposed for the /estimate lead ask, which lives on a page that has no
+   * #waitlist-form and would otherwise need its own copy of the insert
+   * contract above. Kept here on purpose: the header comment names three
+   * writers of this table across three repos, and a fourth inside this one
+   * would be the drift that comment warns about.
+   *
+   * NOTE the /estimate page prefers estimate-log's confirm path, which attaches
+   * the email to the LOG it is about; this is the fallback for a visitor who
+   * used the manual calculator and never ran a photo.
+   */
+  window.lumberWaitlistSubmit = function (emailValue, note, done) {
+    var addr = (emailValue || '').trim();
+    if (!addr) { if (done) done(false); return; }
+    postWaitlist({
+      email: addr,
+      zip: null,
+      role: 'interested',
+      note: note || 'lumber: estimate page',
+      source: 'lumber.bid',
+    })
+      .then(function (ok) { if (done) done(ok); })
+      .catch(function () { if (done) done(false); });
+  };
+
   var form = document.getElementById('waitlist-form');
   if (!form) return;
 
