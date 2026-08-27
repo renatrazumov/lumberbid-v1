@@ -57,6 +57,13 @@
   /** Map free-text species to a value tier; unknown -> utility (conservative). */
   function speciesValue(species) {
     var s = String(species || '').toLowerCase().trim();
+    // Empty MUST short-circuit: '' passes key.indexOf('') for every key, so
+    // without this an empty species resolved to the FIRST table entry --
+    // walnut, the most valuable species in the table -- instead of the
+    // conservative default this function promises. Fixed 2026-08-27 in step
+    // with timberbid-v1:utils/logValuation.ts (counterpart rule: both or
+    // neither).
+    if (!s) return { tier: 'utility', baseSawlogPerMbf: 180, veneerPerMbf: 300 };
     if (SPECIES[s]) return SPECIES[s];
     for (var key in SPECIES) {
       if (s.indexOf(key) !== -1 || key.indexOf(s) !== -1) return SPECIES[key];
