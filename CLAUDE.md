@@ -6,8 +6,10 @@ A **front end on timber.bid's backend.** Not a new product, not a new backend.
 One Supabase project (`uuzqezohkqgsbbxyzvvv`), one Stripe platform, one email
 chokepoint — shared with `timber.bid`, `wood.delivery` and `timberbid.app`.
 
-Today it serves the sealed-bid front door plus **one write** (the lumber
-interest waitlist, anon insert into `wood_delivery_waitlist`) and **one
+Today it serves the sealed-bid front door plus **two writes** — the lumber
+interest waitlist (anon insert into `wood_delivery_waitlist`) and first-party
+analytics beacons (`site/metrics.js`, anon insert into `site_events`, no PII;
+counterpart: timberbid-v1 migration `20260827235000`) — and **one
 backend call**: `POST /functions/v1/estimate-log` from `/estimate` — a
 vision-only edge fn in timberbid-v1 that reads a log photo into MEASURED FACTS
 (species, diameter, length, condition + confidences). It never prices; the
@@ -117,7 +119,11 @@ the right stack the moment this surface carries real content.
 netlify.toml     publish config + security headers (CSP: default-src 'none',
                  plus script-src 'self' and connect-src to the Supabase project)
 site/index.html  the holding page — inline CSS, one deferred first-party script
-site/waitlist.js the ONE write this site makes (see contract below)
+site/waitlist.js the first write this site makes (see contract below)
+site/metrics.js  the second write — first-party pageview/funnel beacons into
+                 site_events (no PII, no vendor; the CSP admits nothing else).
+                 Counterpart: timberbid-v1 migration 20260827235000. Every
+                 send is fire-and-forget: absent analytics change nothing.
 site/estimate.html + estimate.js + log-model.js — the log value estimator
                  (photo mode calls timberbid-v1:estimate-log; see above).
                  log-model.js is a FAITHFUL PORT of timberbid-v1:utils/

@@ -66,7 +66,12 @@
       note: note || 'lumber: estimate page',
       source: 'lumber.bid',
     })
-      .then(function (ok) { if (done) done(ok); })
+      .then(function (ok) {
+        // Funnel beacon — see site/metrics.js. Guarded; absent analytics
+        // must change nothing here.
+        if (ok && typeof window.lbTrack === 'function') window.lbTrack('waitlist_joined', { via: 'estimate_manual' });
+        if (done) done(ok);
+      })
       .catch(function () { if (done) done(false); });
   };
 
@@ -113,6 +118,7 @@
       .then(function (res) {
         // 409 = already on the list = on the list.
         if (res.ok || res.status === 409) {
+          if (typeof window.lbTrack === 'function') window.lbTrack('waitlist_joined', { via: 'homepage_form' });
           form.hidden = true;
           say("You're on the list. One email when it opens — that's the whole deal.", true);
           return;

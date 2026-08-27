@@ -142,6 +142,9 @@
     downscale(file)
       .then(function (dataUrl) {
         photos[activeSlot] = dataUrl;
+        // Funnel beacon — see site/metrics.js. Guarded: analytics absent
+        // must change nothing about how this page works.
+        if (typeof window.lbTrack === 'function') window.lbTrack('estimate_photo_added', { slot: activeSlot });
         if (box) {
           box.classList.add('filled');
           var pv = box.querySelector('img.preview');
@@ -195,6 +198,11 @@
     goBtn.disabled = true;
     helper.textContent = '';
     say('Reading the log…');
+    // Funnel beacons throughout — see site/metrics.js. The 2026-08-26 lesson:
+    // one visitor's estimate was REJECTED by the model and from the database
+    // that was indistinguishable from the tool never being tried at all.
+    var trk = function (ev, meta) { if (typeof window.lbTrack === 'function') window.lbTrack(ev, meta); };
+    trk('estimate_requested', { photos: send.length });
     fetch(FN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -202,15 +210,16 @@
     })
       .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
       .then(function (r) {
-        if (!r.ok) { say(r.j && r.j.error ? r.j.error : 'Could not read the photo — try again.', false); return; }
-        if (!r.j.log_detected) { say(r.j.reject_reason || 'No log visible in that photo — try another angle.', false); return; }
+        if (!r.ok) { trk('estimate_failed', { status: 'http' }); say(r.j && r.j.error ? r.j.error : 'Could not read the photo — try again.', false); return; }
+        if (!r.j.log_detected) { trk('estimate_rejected', {}); say(r.j.reject_reason || 'No log visible in that photo — try another angle.', false); return; }
+        trk('estimate_returned', { species: String(r.j.species || '').slice(0, 30) });
         // Older deploys of estimate-log do not return an id; everything below
         // is a no-op in that case, by design.
         lastEstimateId = typeof r.j.estimate_id === 'string' ? r.j.estimate_id : null;
         applyFacts(r.j);
         scheduleConfirmation();
       })
-      .catch(function () { say('Network problem — check your connection and try again.', false); })
+      .catch(function () { trk('estimate_failed', { status: 'network' }); say('Network problem — check your connection and try again.', false); })
       .finally(function () { goBtn.disabled = false; refreshCta(); });
   });
 
@@ -280,7 +289,14 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-      .then(function (res) { if (onDone) onDone(res.ok); })
+      .then(function (res) {
+        if (res.ok && typeof window.lbTrack === 'function') {
+          // The correction is the dataset; an email with it is a lead too.
+          window.lbTrack('estimate_corrected', {});
+          if (email) window.lbTrack('waitlist_joined', { via: 'estimate_confirm' });
+        }
+        if (onDone) onDone(res.ok);
+      })
       .catch(function () { if (onDone) onDone(false); });
   }
 
