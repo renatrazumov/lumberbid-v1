@@ -17,11 +17,19 @@ bands are computed client-side in `site/log-model.js`. The fn's header names
 this page as its counterpart — change the response contract in both places or
 neither.
 
-Two more read-only backend touches since 2026-08-23: `/leaderboard` calls the
+One more read-only backend touch since 2026-08-23: `/leaderboard` calls the
 `lumber_leaderboard()` RPC as anon (counterpart: the migration's self-test pins
-the shape `site/leaderboard.js` depends on), and every page's `og:image` points
-at `og-image?type=lumber_leaderboard`, which renders the live record card
-(5-minute cache). Still zero writes beyond the waitlist.
+the shape `site/leaderboard.js` depends on). Its own page still uses the
+`og-image?type=lumber_leaderboard` live record card.
+
+REFOCUSED 2026-08-27: **the front door is the appraiser, not the leaderboard.**
+The homepage leads with "what is your log worth?" and the sell-your-logs path
+(2.5% seller fee at settlement — stated as copy, computed only in
+timberbid-v1:utils/fees.ts). The leaderboard is DEMOTED until the first real
+close: no homepage card, no sitemap entry, `noindex` on the page (thin-content
+lesson — an empty board must not represent the domain), and the homepage
+og:image no longer claims a record that doesn't exist. All four demotions lift
+together the day one lot closes with competing bids.
 
 The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.

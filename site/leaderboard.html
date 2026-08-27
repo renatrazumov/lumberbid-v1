@@ -6,6 +6,13 @@
 <title>The most expensive wood ever sold — lumber.bid</title>
 
 <meta name="description" content="The public leaderboard for the most expensive wood sold on lumber.bid — walnut burls, figured maple, rare species, standing timber. Every price here will be a real hammer price; the board fills the moment the first lot closes.">
+<!-- NOINDEX until the first real close. An empty leaderboard is a thin page,
+     and thin-content demotion is site-wide (the 509-shells lesson). The page
+     stays live and reachable — it is honest about being empty — it just does
+     not represent this site to crawlers until it has one true row. LIFT THIS
+     the day a lot closes with competing bids; the sitemap entry comes back
+     with it. -->
+<meta name="robots" content="noindex">
 <link rel="canonical" href="https://lumber.bid/leaderboard">
 
 <meta property="og:type" content="website">

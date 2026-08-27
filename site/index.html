@@ -3,27 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>lumber.bid — a timber.bid domain</title>
+<title>lumber.bid — what is your log worth?</title>
 
 <!-- Indexable since 2026-08-21: the page carries real content now (the sealed
      process, the estimator, the waitlist) — no longer a thin holding page. -->
 
-<!-- Says what this domain IS. A domain that sends mail needs a page that
-     identifies it as legitimately ours; a parked page reads as a throwaway. -->
-<meta name="description" content="lumber.bid is an official domain of timber.bid, reserved for the sawmill and lumber vertical. Tree services and firewood are live at timber.bid.">
+<!-- REFOCUSED 2026-08-27: the front door is the APPRAISER, because that is the
+     money path — someone with a log learns what it is worth, and the rare real
+     lot becomes a broker-run sealed sale that settles on timber.bid's rails.
+     The leaderboard was the detour: spectacle for a market with zero sales.
+     It stays live at /leaderboard but no longer fronts this site. -->
+<meta name="description" content="Photograph a log, get an honest answer: species, board feet, sawlog grade, and a real value band. The good ones sell by sealed bid on timber.bid's escrow rails — free to post, a 2.5% seller fee only when a lot actually sells.">
 <link rel="canonical" href="https://lumber.bid/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="lumber.bid — a timber.bid domain">
-<meta property="og:description" content="Reserved for the sawmill and lumber vertical of timber.bid. Not open yet.">
+<meta property="og:title" content="lumber.bid — what is your log worth?">
+<meta property="og:description" content="Photo to species, board feet, grade, and an honest value band. Sealed sales for the logs that are worth it.">
 <meta property="og:url" content="https://lumber.bid/">
-<!-- Same live record card as /leaderboard - a share of the front door shows
-     the most expensive wood sold here, or that the record is unclaimed. -->
-<meta property="og:image" content="https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/og-image?type=lumber_leaderboard">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/og-image?type=lumber_leaderboard">
+<!-- No og:image on purpose. The old one was the live leaderboard record card,
+     which made every share of the FRONT DOOR claim a most-expensive-wood
+     record on a site with zero sales. A text preview beats a false identity;
+     restore an image here when there is a true one to show. -->
+<meta name="twitter:card" content="summary">
 
 <!-- Inline SVG favicon: no external request, so the strict CSP holds. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
@@ -189,22 +190,47 @@
   <h1>lumber<span class="dot">.</span>bid</h1>
 
   <p class="lede">
-    Reserved for the sawmill and lumber side of timber.bid — grading logs,
-    board-foot valuation, and sealed timber bids.
+    <em>&ldquo;Is this log worth anything?&rdquo;</em> — the first question in
+    every timber sale, answered honestly. The sawmill and lumber side of
+    timber.bid.
   </p>
 
+  <a class="cta" href="/estimate">What is your log worth? &rarr;</a>
+
   <div class="card">
-    <h2>Status</h2>
+    <h2>Get the number first</h2>
     <p>
-      The sealed-bid rails are <strong>built and live</strong> on timber.bid&rsquo;s
-      funded-deals engine (escrow, close, payout). <strong>No auction is open
-      yet</strong> — the first sales will be broker-run while the buyer side
-      is seeded, so a lot never closes with one lowball bid. No liquidity is
-      implied that does not exist.
+      Photograph the log — or type what you measured — and get species, board
+      feet by Doyle or International rule, sawlog grade, and a <strong>value
+      band</strong>, never a fake precise price. Most yard trees are worth
+      nothing as sawlogs, and this tool will tell you so; that honesty is the
+      point. The rare real log — the clean walnut, the stave-grade white oak —
+      deserves a real sale.
+    </p>
+    <a class="cta" href="/estimate">Run the free log estimate &rarr;</a>
+  </div>
+
+  <!-- THE MONEY CARD. Free to post; the seller fee exists only at settlement.
+       The 2.5% figure is stated as copy, never computed here — fee math is
+       single-source in timberbid-v1:utils/fees.ts (SELLER_FEE_RATE = 0.025,
+       verified 2026-08-27). If that constant changes, this sentence changes. -->
+  <div class="card">
+    <h2>Sell your logs</h2>
+    <p>
+      Worth selling? It runs as a <strong>sealed-bid sale</strong> on
+      timber.bid&rsquo;s escrow rails — mills and buyers bid blind, highest at
+      close wins, the money settles on the funded rail. <strong>Free to post.
+      A 2.5% seller fee, only when a lot actually sells.</strong> Nothing for
+      listing, nothing for a lot that doesn&rsquo;t move.
     </p>
     <p>
-      Tree services and firewood <em>are</em> live today, on the main site.
+      <strong>No auction is open yet</strong> — the first sales are broker-run
+      while the buyer side is seeded, so a lot never closes with one lowball
+      bid. No liquidity is implied that does not exist. Have a lot worth
+      running? Leave your email below and it goes to the front of the line.
     </p>
+    <a class="cta" href="https://timber.bid/lumber/post">Post a timber lot &rarr;</a>
+    <p class="wl-fine" style="margin-top:.6rem"><a href="https://timber.bid/lumber">Or browse the lot board</a> — and see honestly whether anything is open.</p>
   </div>
 
   <div class="card">
@@ -225,37 +251,6 @@
     </ol>
   </div>
 
-  <div class="card">
-    <h2>The leaderboard</h2>
-    <p>
-      The most expensive wood ever sold here, ranked by real hammer price &mdash;
-      burls, figured maple, rare species, standing timber. Live public auctions
-      show every bid as it lands. Nothing is ranked for money except the money
-      someone actually paid for wood.
-    </p>
-    <a class="cta" href="/leaderboard">See the board &rarr;</a>
-  </div>
-
-  <div class="card">
-    <h2>The lot board</h2>
-    <p>
-      Sealed lots live on the main platform — one engine, one escrow, one bid
-      sheet. Browse what&rsquo;s open (or see honestly that nothing is yet), or
-      post a lot of your own: species, volume, metal disclosure, reserve.
-    </p>
-    <a class="cta" href="https://timber.bid/lumber">Browse sealed timber lots &rarr;</a>
-  </div>
-
-  <div class="card">
-    <h2>Start with the number</h2>
-    <p>
-      <em>&ldquo;Is this log worth anything?&rdquo;</em> is the first question in
-      every timber sale. The estimator answers it honestly — board feet by
-      Doyle or International rule, sawlog grade, and a value band, never a fake
-      precise price.
-    </p>
-    <a class="cta" href="/estimate">Try the log value estimator &rarr;</a>
-  </div>
 
   <div class="card">
     <h2>One email when it opens</h2>
