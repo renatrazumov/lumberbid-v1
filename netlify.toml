@@ -25,4 +25,9 @@
     # target: the shared Supabase project, for the waitlist insert. Everything
     # else stays denied. form-action stays 'none' on purpose — the form is
     # intercepted by JS and must never fall through to a native POST.
-    Content-Security-Policy = "default-src 'none'; script-src 'self'; connect-src https://uuzqezohkqgsbbxyzvvv.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"
+    # img-src admits the Supabase project because lot photos are public-bucket
+    # URLs on that origin (site/lots.js renders them straight from
+    # listings.images). Without it the strip fetches fine and every photo is
+    # silently blocked -- a CSP failure looks like missing images, not an
+    # error. Same origin as connect-src; no new third party.
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; connect-src https://uuzqezohkqgsbbxyzvvv.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://uuzqezohkqgsbbxyzvvv.supabase.co; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"

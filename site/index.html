@@ -102,6 +102,54 @@
     padding: 1.5rem;
     margin-bottom: 2.5rem;
   }
+
+  /* Open lots — rendered by site/lots.js only when lots are actually live.
+     Photos lead, because wood is bought by eye. */
+  .lots { margin-bottom: 2.5rem; }
+  .lots h2 {
+    font-size: .8rem; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem;
+  }
+  .lot-grid {
+    display: grid; gap: 1rem; margin-bottom: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .lot {
+    display: block; text-decoration: none; color: inherit; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; transition: border-color .15s ease;
+  }
+  .lot:hover, .lot:focus-visible { border-color: var(--brand); }
+  .lot-shot { position: relative; aspect-ratio: 16 / 10; background: #0d110c; }
+  .lot-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lot-noshot {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: .8rem;
+  }
+  .lot-count {
+    position: absolute; right: .5rem; bottom: .5rem;
+    background: rgba(0,0,0,.62); color: #fff; font-size: .72rem; font-weight: 700;
+    padding: .12rem .45rem; border-radius: 999px;
+  }
+  .lot-body { padding: .85rem 1rem 1rem; }
+  .lot-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: .5rem; margin-bottom: .35rem;
+  }
+  .lot-species {
+    font-weight: 700; color: var(--brand); text-transform: capitalize; font-size: .95rem;
+  }
+  .lot-tag { font-size: .66rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); white-space: nowrap; }
+  .lot-tag.open { color: #E8A33D; }
+  .lot-title { margin: 0 0 .4rem; font-size: .92rem; line-height: 1.4; }
+  .lot-meta { margin: 0 0 .25rem; font-size: .8rem; color: var(--muted); }
+  .lot-metal { margin: 0 0 .25rem; font-size: .74rem; color: #E8A33D; }
+  .lot-bottom {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: .5rem; margin-top: .55rem;
+  }
+  .lot-price { font-weight: 700; font-size: .92rem; }
+  .lot-bids { font-size: .78rem; color: var(--muted); }
   .card h2 {
     font-size: .8rem;
     font-weight: 600;
@@ -197,6 +245,12 @@
 
   <a class="cta" href="/estimate">What is your log worth? &rarr;</a>
 
+  <!-- Open lots with their lead photos. Rendered by site/lots.js ONLY when
+       real lots are live; hidden and empty otherwise, so the page at zero
+       lots is exactly the page that shipped without it. Wood is bought by
+       eye — the day there is wood, it goes above everything else. -->
+  <section id="open-lots" class="lots" hidden></section>
+
   <div class="card">
     <h2>Get the number first</h2>
     <p>
@@ -280,6 +334,7 @@
 </main>
 
 <script src="/metrics.js" defer></script>
+<script src="/lots.js" defer></script>
 <script src="/waitlist.js" defer></script>
 
 <footer>
