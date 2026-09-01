@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lumber.bid — what is your log worth?</title>
 
-<!-- Indexable since 2026-08-21: the page carries real content now (the sealed
-     process, the estimator, the waitlist) — no longer a thin holding page. -->
+<!-- Indexable since 2026-08-21: real content (the sealed process, the
+     estimator, the waitlist) — not a thin holding page.
 
-<!-- REFOCUSED 2026-08-27: the front door is the APPRAISER, because that is the
-     money path — someone with a log learns what it is worth, and the rare real
-     lot becomes a broker-run sealed sale that settles on timber.bid's rails.
-     The leaderboard was the detour: spectacle for a market with zero sales.
-     It stays live at /leaderboard but no longer fronts this site. -->
+     REFOCUSED 2026-08-27, REBUILT AS A LANDING PAGE 2026-09-01: the front door
+     is the APPRAISER, because that is the money path — someone with a log
+     learns what it is worth, and the rare real lot becomes a broker-run sealed
+     sale that settles on timber.bid's rails. The leaderboard stays live at
+     /leaderboard but is demoted (no card here, noindex, out of the sitemap)
+     until the first real close. -->
 <meta name="description" content="Photograph a log, get an honest answer: species, board feet, sawlog grade, and a real value band. The good ones sell by sealed bid on timber.bid's escrow rails — free to post, a 2.5% seller fee only when a lot actually sells.">
 <link rel="canonical" href="https://lumber.bid/">
 
@@ -30,320 +31,432 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
 
 <style>
-  /* timber.bid green. Amber is reserved for firewood/money surfaces, so it is
-     deliberately absent here; red is errors only. */
-  /* lumber.bid's own look: forest green, fixed for EVERY visitor (founder
-     decision 2026-08-21 — no light/dark switching on the front door). The
-     estimator page follows timber.bid's light format via brand.css. */
+  /* lumber.bid's own look: forest green, FIXED for every visitor (founder
+     decision 2026-08-21 — no light/dark switching on the front door). Amber
+     is the family's money colour and appears only on money facts; red is
+     errors only. No external fonts: font-src is 'self' and the CSP admits
+     nothing else, so the type is a deliberately composed system stack — a
+     bookish serif for the headings (the field-guide register of the
+     extension bulletins this trade already reads), a clean sans for running
+     text, and a monospace for labels and numbers (the scaling-stick register). */
   :root {
-    --brand: #6FBF73;
     --bg: #10140f;
     --surface: #171d16;
+    --surface-2: #1c241b;
     --border: #2a332a;
     --text: #eaf0e9;
     --muted: #9aa89c;
+    --brand: #6FBF73;
+    --brand-deep: #2E7D32;
+    --amber: #E8A33D;
+    --err: #ef6b5f;
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
   }
 
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   html, body { margin: 0; padding: 0; }
-
   body {
     background: var(--bg);
     color: var(--text);
-    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
   }
-
-  main {
-    flex: 1;
-    width: 100%;
-    max-width: 44rem;
-    margin: 0 auto;
-    padding: clamp(3rem, 12vh, 8rem) 1.5rem 3rem;
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 4px;
   }
-
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.4rem; }
+  .prose { max-width: 720px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; }
+  p { margin: 0 0 1rem; }
   .eyebrow {
-    display: inline-block;
-    font-size: .75rem;
-    font-weight: 600;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--brand);
+    font-family: var(--mono); font-size: .74rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--brand); font-weight: 600;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .money { color: var(--amber); font-weight: 700; }
+
+  /* CTAs. The 2026-08-23 lesson: a later `a { color }` rule once painted CTA
+     text brand-on-brand and made every button invisible. The button's colour
+     is set here with a selector nothing else outranks. */
+  .cta, .cta:hover {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--brand); color: var(--bg) !important;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    padding: .85rem 1.35rem; border-radius: 10px; border: 0; cursor: pointer;
+    font-family: var(--body); line-height: 1.2;
+  }
+  .cta.ghost, .cta.ghost:hover {
+    background: transparent; color: var(--brand) !important;
     border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 999px;
-    padding: .35rem .8rem;
-    margin-bottom: 1.75rem;
   }
+  .cta.ghost:hover { border-color: var(--brand); }
+  .cta:disabled { opacity: .6; cursor: default; }
 
-  h1 {
-    font-size: clamp(2.25rem, 7vw, 3.5rem);
-    line-height: 1.1;
-    letter-spacing: -.02em;
-    margin: 0 0 1rem;
+  /* ---- header -------------------------------------------------------- */
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border);
   }
-  h1 .dot { color: var(--brand); }
+  .wordmark { font-family: var(--display); font-size: 1.35rem; font-weight: 600; color: var(--text); text-decoration: none; }
+  .wordmark:hover { text-decoration: none; }
+  .wordmark .dot { color: var(--brand); }
+  .wordmark small { font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-left: .6rem; font-weight: 500; }
+  nav.links { display: flex; gap: 1.4rem; font-size: .95rem; }
+  nav.links a { color: var(--muted); }
+  nav.links a:hover { color: var(--text); text-decoration: none; }
+  @media (max-width: 640px) { nav.links { display: none; } }
 
-  .lede {
-    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
-    color: var(--muted);
-    margin: 0 0 2.5rem;
-    max-width: 34rem;
+  /* ---- hero ---------------------------------------------------------- */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr);
+    gap: 3rem; align-items: center; padding: 4.5rem 0 3.5rem;
   }
+  @media (max-width: 800px) { .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 0 2.5rem; } }
+  .hero h1 { font-size: clamp(2.5rem, 6.2vw, 4.1rem); line-height: 1.04; letter-spacing: -.012em; margin: .8rem 0 1.1rem; }
+  .hero .lede { font-size: 1.18rem; line-height: 1.55; color: var(--muted); max-width: 34rem; margin: 0 0 1.6rem; }
+  .hero .lede strong { color: var(--text); font-weight: 600; }
+  .ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.1rem; }
+  .honest {
+    font-family: var(--mono); font-size: .76rem; color: var(--muted); line-height: 1.6;
+    border-left: 2px solid var(--border); padding-left: .8rem; max-width: 30rem;
+  }
+  .rings { width: 100%; max-width: 420px; margin: 0 auto; display: block; }
+  @media (max-width: 800px) { .rings { max-width: 260px; } }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2.5rem;
-  }
-
-  /* Open lots — rendered by site/lots.js only when lots are actually live.
-     Photos lead, because wood is bought by eye. */
-  .lots { margin-bottom: 2.5rem; }
-  .lots h2 {
-    font-size: .8rem; font-weight: 600; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem;
-  }
-  .lot-grid {
-    display: grid; gap: 1rem; margin-bottom: 1.25rem;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-  .lot {
-    display: block; text-decoration: none; color: inherit; overflow: hidden;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; transition: border-color .15s ease;
-  }
-  .lot:hover, .lot:focus-visible { border-color: var(--brand); }
+  /* ---- open lots (site/lots.js renders here ONLY when lots are live) ---- */
+  .lots { margin: 0 0 3.5rem; }
+  .lots h2 { font-family: var(--mono); font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
+  .lot-grid { display: grid; gap: 1rem; margin-bottom: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .lot { display: block; text-decoration: none; color: inherit; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: border-color .15s ease; }
+  .lot:hover, .lot:focus-visible { border-color: var(--brand); text-decoration: none; }
   .lot-shot { position: relative; aspect-ratio: 16 / 10; background: #0d110c; }
   .lot-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .lot-noshot {
-    display: flex; align-items: center; justify-content: center;
-    color: var(--muted); font-size: .8rem;
-  }
-  .lot-count {
-    position: absolute; right: .5rem; bottom: .5rem;
-    background: rgba(0,0,0,.62); color: #fff; font-size: .72rem; font-weight: 700;
-    padding: .12rem .45rem; border-radius: 999px;
-  }
+  .lot-noshot { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .8rem; }
+  .lot-count { position: absolute; right: .5rem; bottom: .5rem; background: rgba(0,0,0,.62); color: #fff; font-size: .72rem; font-weight: 700; padding: .12rem .45rem; border-radius: 999px; }
   .lot-body { padding: .85rem 1rem 1rem; }
-  .lot-top {
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: .5rem; margin-bottom: .35rem;
-  }
-  .lot-species {
-    font-weight: 700; color: var(--brand); text-transform: capitalize; font-size: .95rem;
-  }
-  .lot-tag { font-size: .66rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); white-space: nowrap; }
-  .lot-tag.open { color: #E8A33D; }
+  .lot-top { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; margin-bottom: .35rem; }
+  .lot-species { font-weight: 700; color: var(--brand); text-transform: capitalize; font-size: .95rem; }
+  .lot-tag { font-family: var(--mono); font-size: .64rem; font-weight: 600; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+  .lot-tag.open { color: var(--amber); }
   .lot-title { margin: 0 0 .4rem; font-size: .92rem; line-height: 1.4; }
   .lot-meta { margin: 0 0 .25rem; font-size: .8rem; color: var(--muted); }
-  .lot-metal { margin: 0 0 .25rem; font-size: .74rem; color: #E8A33D; }
-  .lot-bottom {
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: .5rem; margin-top: .55rem;
-  }
+  .lot-metal { margin: 0 0 .25rem; font-size: .74rem; color: var(--amber); }
+  .lot-bottom { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; margin-top: .55rem; }
   .lot-price { font-weight: 700; font-size: .92rem; }
   .lot-bids { font-size: .78rem; color: var(--muted); }
-  .card h2 {
-    font-size: .8rem;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 .75rem;
-  }
-  .card p { margin: 0 0 .85rem; }
-  .card p:last-child { margin-bottom: 0; }
 
-  a.cta {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    background: var(--brand);
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    padding: .85rem 1.5rem;
-    border-radius: 8px;
-  }
-  a.cta:hover { filter: brightness(1.08); }
-  a.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-  a.cta { color: #0d1a0e; }
+  /* ---- sections ------------------------------------------------------ */
+  section.block { padding: 3.2rem 0; border-top: 1px solid var(--border); }
+  section.block h2 { font-size: clamp(1.7rem, 3.4vw, 2.2rem); line-height: 1.15; margin: .6rem 0 1rem; }
+  section.block .intro { color: var(--muted); font-size: 1.05rem; max-width: 40rem; }
 
-  /* Waitlist form — same visual family as .card. */
-  .wl-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .85rem; }
-  .wl-who { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-bottom: 1rem; }
-  .wl-who label {
-    display: inline-flex; align-items: center; gap: .4rem;
-    font-size: .92rem; color: var(--text); cursor: pointer;
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.4rem 1.5rem; }
+  .step .k { font-family: var(--mono); font-size: .8rem; color: var(--brand); font-weight: 600; letter-spacing: .08em; }
+  .step h3 { font-size: 1.28rem; margin: .5rem 0 .55rem; }
+  .step p { color: var(--muted); font-size: .97rem; margin: 0; }
+  .step p strong { color: var(--text); font-weight: 600; }
+
+  .tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+  @media (max-width: 760px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1.3rem; }
+  .tier .k { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+  .tier.premium .k { color: var(--brand); }
+  .tier .species { font-family: var(--display); font-size: 1.22rem; line-height: 1.35; margin: .45rem 0 .5rem; }
+  .tier p { color: var(--muted); font-size: .92rem; margin: 0; }
+  .callout {
+    margin-top: 1.6rem; background: var(--surface-2); border: 1px solid var(--border);
+    border-left: 3px solid var(--brand); border-radius: 0 12px 12px 0; padding: 1.1rem 1.3rem; max-width: 46rem;
   }
+  .callout p { margin: 0; font-size: 1rem; }
+  .callout p + p { margin-top: .6rem; }
+
+  .split { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 2.5rem; align-items: start; margin-top: 1.5rem; }
+  @media (max-width: 800px) { .split { grid-template-columns: 1fr; gap: 1.6rem; } }
+  .terms { list-style: none; padding: 0; margin: 1.2rem 0 1.6rem; display: grid; gap: .55rem; }
+  .terms li { display: flex; gap: .7rem; align-items: flex-start; font-size: 1rem; }
+  .terms li::before { content: "—"; color: var(--brand); flex: none; font-family: var(--mono); }
+  .fact { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.5rem; }
+  .fact .big { font-family: var(--display); font-size: 2.6rem; line-height: 1; color: var(--brand); margin: .2rem 0 .6rem; }
+  .fact p { color: var(--muted); font-size: .95rem; margin: 0 0 .7rem; }
+  .fact cite { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var(--muted); display: block; line-height: 1.6; }
+  .status {
+    margin-top: 1.4rem; font-family: var(--mono); font-size: .78rem; line-height: 1.65; color: var(--muted);
+    background: var(--surface); border: 1px dashed var(--border); border-radius: 10px; padding: .9rem 1.1rem; max-width: 46rem;
+  }
+  .status strong { color: var(--text); font-weight: 600; }
+
+  /* ---- waitlist (ids and classes are site/waitlist.js's contract) ------ */
+  .wl { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
+  @media (max-width: 800px) { .wl { grid-template-columns: 1fr; padding: 1.5rem; } }
+  .wl h2 { font-size: 1.7rem; margin: .5rem 0 .7rem; }
+  .wl .intro { font-size: 1rem; }
+  .wl-who { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-bottom: .9rem; font-size: .92rem; color: var(--muted); }
+  .wl-who label { display: inline-flex; gap: .4rem; align-items: center; cursor: pointer; }
   .wl-who input { accent-color: var(--brand); }
-  input[type="email"], input[type="text"] {
-    flex: 1 1 12rem;
-    font: inherit;
-    color: var(--text);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: .7rem .9rem;
+  .wl-row { display: grid; grid-template-columns: minmax(0, 1fr) 130px; gap: .6rem; margin-bottom: .75rem; }
+  @media (max-width: 480px) { .wl-row { grid-template-columns: 1fr; } }
+  .wl input[type="email"], .wl input[type="text"] {
+    width: 100%; padding: .8rem .9rem; font: inherit; font-size: 1rem; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
   }
-  input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
-  #wl-zip { flex: 0 1 7.5rem; }
-  button.cta {
-    display: inline-flex; align-items: center; gap: .5rem;
-    background: var(--brand); color: #fff;
-    border: 0; cursor: pointer;
-    font: inherit; font-weight: 600;
-    padding: .75rem 1.4rem; border-radius: 8px;
-  }
-  button.cta:hover { filter: brightness(1.08); }
-  button.cta:disabled { opacity: .6; cursor: default; }
-  button.cta:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-  button.cta { color: #0d1a0e; }
-  .wl-status { font-size: .9rem; margin: .25rem 0 0; }
-  .wl-status.ok { color: var(--brand); font-weight: 600; }
-  .wl-status.err { color: #B3261E; }
-  .wl-status.err { color: #F2B8B5; }
-  .wl-fine { font-size: .78rem; color: var(--muted); margin: .6rem 0 0; }
-  .steps { margin: 0; padding-left: 1.3rem; }
-  .steps li { margin-bottom: .7rem; }
-  .steps li:last-child { margin-bottom: 0; }
-  .card a:not(.cta) { color: var(--brand); } /* :not(.cta): equal specificity, later in the sheet - without it a card CTA renders brand-on-brand, i.e. invisible */
+  .wl input::placeholder { color: #6f7b70; }
+  .wl-status { margin: .7rem 0 0; font-size: .92rem; min-height: 1.3em; }
+  .wl-status.ok { color: var(--brand); }
+  .wl-status.err { color: var(--err); }
+  .wl-fine { font-size: .78rem; color: var(--muted); margin: .5rem 0 0; }
 
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 1.75rem 1.5rem 2.5rem;
-  }
-  .footer-inner {
-    max-width: 44rem;
-    margin: 0 auto;
-    font-size: .8rem;
-    color: var(--muted);
-  }
-  .footer-inner p { margin: 0 0 .4rem; }
-  .footer-inner a { color: var(--muted); }
+  /* ---- footer -------------------------------------------------------- */
+  footer { border-top: 1px solid var(--border); margin-top: 3.5rem; padding: 2rem 0 2.5rem; font-size: .85rem; color: var(--muted); }
+  footer p { margin: 0 0 .4rem; }
+  footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  footer a:hover { color: var(--text); }
+  .foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
 </style>
 </head>
 <body>
 
-<main>
-  <span class="eyebrow">An official timber&#8203;.bid domain</span>
+<div class="wrap">
+  <header class="top">
+    <a class="wordmark" href="/">lumber<span class="dot">.</span>bid <small>a timber.bid company</small></a>
+    <nav class="links" aria-label="Site">
+      <a href="/estimate">Estimate a log</a>
+      <a href="#sell">Sell your logs</a>
+      <a href="#how">How it works</a>
+      <a href="https://timber.bid/">timber.bid &nearr;</a>
+    </nav>
+  </header>
 
-  <h1>lumber<span class="dot">.</span>bid</h1>
-
-  <p class="lede">
-    <em>&ldquo;Is this log worth anything?&rdquo;</em> — the first question in
-    every timber sale, answered honestly. The sawmill and lumber side of
-    timber.bid.
-  </p>
-
-  <a class="cta" href="/estimate">What is your log worth? &rarr;</a>
-
-  <!-- Open lots with their lead photos. Rendered by site/lots.js ONLY when
-       real lots are live; hidden and empty otherwise, so the page at zero
-       lots is exactly the page that shipped without it. Wood is bought by
-       eye — the day there is wood, it goes above everything else. -->
-  <section id="open-lots" class="lots" hidden></section>
-
-  <div class="card">
-    <h2>Get the number first</h2>
-    <p>
-      Photograph the log — or type what you measured — and get species, board
-      feet by Doyle or International rule, sawlog grade, and a <strong>value
-      band</strong>, never a fake precise price. Most yard trees are worth
-      nothing as sawlogs, and this tool will tell you so; that honesty is the
-      point. The rare real log — the clean walnut, the stave-grade white oak —
-      deserves a real sale.
-    </p>
-    <a class="cta" href="/estimate">Run the free log estimate &rarr;</a>
-  </div>
-
-  <!-- THE MONEY CARD. Free to post; the seller fee exists only at settlement.
-       The 2.5% figure is stated as copy, never computed here — fee math is
-       single-source in timberbid-v1:utils/fees.ts (SELLER_FEE_RATE = 0.025,
-       verified 2026-08-27). If that constant changes, this sentence changes. -->
-  <div class="card">
-    <h2>Sell your logs</h2>
-    <p>
-      Worth selling? It runs as a <strong>sealed-bid sale</strong> on
-      timber.bid&rsquo;s escrow rails — mills and buyers bid blind, highest at
-      close wins, the money settles on the funded rail. <strong>Free to post.
-      A 2.5% seller fee, only when a lot actually sells.</strong> Nothing for
-      listing, nothing for a lot that doesn&rsquo;t move.
-    </p>
-    <p>
-      <strong>No auction is open yet</strong> — the first sales are broker-run
-      while the buyer side is seeded, so a lot never closes with one lowball
-      bid. No liquidity is implied that does not exist. Have a lot worth
-      running? Leave your email below and it goes to the front of the line.
-    </p>
-    <a class="cta" href="https://timber.bid/lumber/post">Post a timber lot &rarr;</a>
-    <p class="wl-fine" style="margin-top:.6rem"><a href="https://timber.bid/lumber">Or browse the lot board</a> — and see honestly whether anything is open.</p>
-  </div>
-
-  <div class="card">
-    <h2>How a sealed timber sale works</h2>
-    <ol class="steps">
-      <li><strong>Spec the lot.</strong> Species, diameters, length, access,
-          metal disclosure — start with the <a href="/estimate">log value
-          estimator</a>.</li>
-      <li><strong>Qualified buyers bid sealed.</strong> No one sees anyone
-          else&rsquo;s number before close — the format state forestry sales
-          have used for decades, because it protects the seller.</li>
-      <li><strong>Close is the public reading.</strong> Highest bid wins; the
-          full bid sheet becomes visible — you see exactly what every buyer
-          offered.</li>
-      <li><strong>Money moves on the funded rail.</strong> The winner&rsquo;s
-          payment settles through timber.bid&rsquo;s escrow engine — a won lot
-          is a funded deal, not a handshake.</li>
-    </ol>
-  </div>
-
-
-  <div class="card">
-    <h2>One email when it opens</h2>
-    <p>
-      If lumber is your business — logs to sell, a mill to feed, land with
-      timber on it — leave your email and we&rsquo;ll send <strong>one note</strong>
-      when this opens. Nothing else, no list to be marketed to.
-    </p>
-    <form id="waitlist-form">
-      <div class="wl-who" role="radiogroup" aria-label="Which best describes you">
-        <label><input type="radio" name="who" value="got_logs" checked> I have logs</label>
-        <label><input type="radio" name="who" value="mill_or_buy"> I mill or buy logs</label>
-        <label><input type="radio" name="who" value="landowner"> I&rsquo;m a landowner</label>
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Log valuation &middot; sealed timber sales</span>
+        <h1>What is your log worth?</h1>
+        <p class="lede">
+          Photograph it. In about a minute you get <strong>species, board feet,
+          sawlog grade, and an honest value band</strong> &mdash; never a fake
+          precise price. If it&rsquo;s worth selling, we run the sale.
+        </p>
+        <div class="ctas">
+          <a class="cta" href="/estimate">Estimate a log &mdash; free &rarr;</a>
+          <a class="cta ghost" href="#sell">Sell your logs</a>
+        </div>
+        <p class="honest">
+          No account needed. No auction is open yet &mdash; the first sales are
+          broker-run while the buyer side is seeded. Nothing here implies a
+          market that doesn&rsquo;t exist.
+        </p>
       </div>
-      <div class="wl-row">
-        <input id="wl-email" type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-        <input id="wl-zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP (optional)" aria-label="ZIP code, optional">
-      </div>
-      <button id="wl-submit" class="cta" type="submit">Notify me</button>
-    </form>
-    <p id="wl-status" class="wl-status" role="status" aria-live="polite"></p>
-    <noscript><p class="wl-fine">This form needs JavaScript.</p></noscript>
-    <p class="wl-fine">Used only for that one announcement. See the privacy policy below.</p>
-  </div>
 
-  <a class="cta" href="https://timber.bid/">Go to timber.bid &rarr;</a>
-</main>
+      <!-- End grain: the first photo the estimator asks for, and the thing a
+           buyer reads first. Concentric rings drawn inline — no image request,
+           so the CSP holds. Decorative; hidden from assistive tech. -->
+      <svg class="rings" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="#6FBF73" stroke-linecap="round">
+          <circle cx="200" cy="200" r="184" stroke-opacity=".10" stroke-width="2"/>
+          <circle cx="202" cy="198" r="168" stroke-opacity=".12" stroke-width="1.4"/>
+          <circle cx="199" cy="201" r="153" stroke-opacity=".16" stroke-width="2.2"/>
+          <circle cx="203" cy="199" r="139" stroke-opacity=".14" stroke-width="1.2"/>
+          <circle cx="198" cy="202" r="126" stroke-opacity=".20" stroke-width="2.6"/>
+          <circle cx="201" cy="197" r="113" stroke-opacity=".16" stroke-width="1.3"/>
+          <circle cx="197" cy="201" r="101" stroke-opacity=".24" stroke-width="2"/>
+          <circle cx="202" cy="200" r="89"  stroke-opacity=".18" stroke-width="1.2"/>
+          <circle cx="199" cy="203" r="78"  stroke-opacity=".28" stroke-width="2.4"/>
+          <circle cx="203" cy="198" r="67"  stroke-opacity=".20" stroke-width="1.1"/>
+          <circle cx="198" cy="200" r="57"  stroke-opacity=".32" stroke-width="2"/>
+          <circle cx="201" cy="202" r="47"  stroke-opacity=".24" stroke-width="1.2"/>
+          <circle cx="200" cy="199" r="38"  stroke-opacity=".38" stroke-width="2.2"/>
+          <circle cx="202" cy="201" r="29"  stroke-opacity=".30" stroke-width="1.2"/>
+          <circle cx="199" cy="200" r="21"  stroke-opacity=".46" stroke-width="2"/>
+          <circle cx="201" cy="199" r="13"  stroke-opacity=".40" stroke-width="1.4"/>
+          <circle cx="200" cy="200" r="6"   stroke-opacity=".60" stroke-width="2.4"/>
+          <!-- two checks: the drying cracks a scaler docks for -->
+          <line x1="200" y1="200" x2="318" y2="82"  stroke-opacity=".22" stroke-width="1.6"/>
+          <line x1="200" y1="200" x2="96"  y2="262" stroke-opacity=".16" stroke-width="1.2"/>
+        </g>
+      </svg>
+    </section>
+
+    <!-- Open lots with their lead photos. Rendered by site/lots.js ONLY when
+         real lots are live; hidden and empty otherwise, so the page at zero
+         lots is exactly this page. The day there is wood, it goes here, above
+         everything else. -->
+    <section id="open-lots" class="lots" hidden></section>
+
+    <section class="block" id="how">
+      <span class="eyebrow">How it works</span>
+      <h2>Three steps, and the second one is honest</h2>
+      <p class="intro">
+        The same discipline timber.bid uses for trees: measure, don&rsquo;t
+        guess. The number comes first; the sale only happens if the number
+        says it should.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <span class="k">01</span>
+          <h3>Photograph the log</h3>
+          <p>End grain, full length, and anything wrong with it. Something for
+             scale &mdash; a tape, a boot, a chainsaw &mdash; makes the read
+             sharper. Or type what you measured and skip the photo.</p>
+        </div>
+        <div class="step">
+          <span class="k">02</span>
+          <h3>Get the real number</h3>
+          <p>Species, small-end diameter, length, defects &mdash; you confirm
+             every reading before a band appears. Board feet by <strong>Doyle
+             or International rule</strong>, then a value range, never false
+             precision.</p>
+        </div>
+        <div class="step">
+          <span class="k">03</span>
+          <h3>Sell it sealed &mdash; if it&rsquo;s worth it</h3>
+          <p>Post the lot. Mills and buyers bid blind, highest at close wins,
+             the full bid sheet goes public after, and the money settles on
+             <strong>timber.bid&rsquo;s escrow rails</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="worth">
+      <span class="eyebrow">What&rsquo;s worth selling</span>
+      <h2>Value lives in the exceptional log, not the average one</h2>
+      <p class="intro">
+        The estimator grades on the tiers mills actually pay by. Most of the
+        time the honest answer is <em>firewood</em> &mdash; and it says so.
+      </p>
+      <div class="tiers">
+        <div class="tier premium">
+          <span class="k">Premium</span>
+          <div class="species">Black walnut, white oak, cherry, hard maple</div>
+          <p>Worth checking from about 16&Prime; diameter. Clean, straight,
+             forest-grown trunks in these species are what the sealed sale is
+             for.</p>
+        </div>
+        <div class="tier">
+          <span class="k">High</span>
+          <div class="species">Red oak, ash, hickory</div>
+          <p>Real sawlog value on big, clean stems &mdash; from roughly
+             20&Prime;. Ash matters right now: borer-killed trees are a
+             salvage wave, and ash still sells.</p>
+        </div>
+        <div class="tier">
+          <span class="k">The rest</span>
+          <div class="species">Soft maple, poplar, birch, most softwood</div>
+          <p>Utility prices. At yard-tree quality the handling costs more than
+             the log brings. The tool will tell you that plainly.</p>
+        </div>
+      </div>
+      <div class="callout">
+        <p><strong>The walnut myth, said early.</strong> Most yard trees are
+           worth nothing as sawlogs: removal costs swamp the log value, loggers
+           won&rsquo;t work near structures, and one embedded nail ruins a mill
+           blade &mdash; which is why every lot here carries a metal disclosure.</p>
+        <p>The rare real log deserves a real sale. The estimator exists to tell
+           the two apart.</p>
+      </div>
+    </section>
+
+    <!-- THE MONEY SECTION. Free to post; the seller fee exists only at
+         settlement. The 2.5% figure is stated as copy, never computed here —
+         fee math is single-source in timberbid-v1:utils/fees.ts
+         (SELLER_FEE_RATE = 0.025, verified 2026-08-27). If that constant
+         changes, this sentence changes. -->
+    <section class="block" id="sell">
+      <span class="eyebrow">Sell your logs</span>
+      <h2>Sealed bids, a public bid sheet, and money that actually moves</h2>
+      <div class="split">
+        <div>
+          <p class="intro">
+            Standing timber and sawlogs have sold by sealed bid for decades
+            because it protects the seller on a large, lumpy, one-time sale.
+            We run that format on rails that already move money for tree
+            services and firewood.
+          </p>
+          <ul class="terms">
+            <li><strong>Free to post.</strong>&nbsp;A <span class="money num">2.5%</span>&nbsp;seller fee, only when a lot actually sells. Nothing for listing, nothing for a lot that doesn&rsquo;t move.</li>
+            <li>Buyers bid blind. A reserve can exist; its number is never shown.</li>
+            <li>Highest bid at close wins. Then the <strong>full bid sheet goes public</strong> &mdash; every offer, visible.</li>
+            <li>Settlement on timber.bid&rsquo;s escrow engine. A won lot is a funded deal, not a handshake.</li>
+          </ul>
+          <div class="ctas">
+            <a class="cta" href="https://timber.bid/lumber/post">Post a timber lot &rarr;</a>
+            <a class="cta ghost" href="https://timber.bid/lumber">Browse the lot board</a>
+          </div>
+          <div class="status">
+            <strong>Status, honestly:</strong> the sealed-bid rails are built and
+            live. <strong>No auction is open yet.</strong> The first sales are
+            broker-run while the buyer side is seeded, so a lot never closes
+            with one lowball bid. Have a lot worth running? Leave your email
+            below and it goes to the front of the line.
+          </div>
+        </div>
+        <aside class="fact" aria-label="Why sealed bids">
+          <span class="eyebrow">Why sealed</span>
+          <div class="big num">up to 30%</div>
+          <p>more to the landowner from a sealed-bid sale than a negotiated
+             one, per the state extension services that advise timber sales
+             &mdash; and the format that pulls in the smaller local bidders a
+             mill-to-mill negotiation leaves out.</p>
+          <cite>
+            <a href="https://lgpress.clemson.edu/publication/sealed-timber-bids-what-you-need-to-know-to-sell-your-timber/">Clemson Land-Grant Press</a> &middot;
+            <a href="https://content.ces.ncsu.edu/timber-sales-a-planning-guide-for-landowners">NC State Extension</a>
+          </cite>
+        </aside>
+      </div>
+    </section>
+
+    <section class="block" id="notify">
+      <div class="wl">
+        <div>
+          <span class="eyebrow">One email when it opens</span>
+          <h2>Logs to sell, a mill to feed, land with timber on it?</h2>
+          <p class="intro">
+            Leave your email and we&rsquo;ll send <strong>one note</strong> when
+            sealed lots open near you. Nothing else &mdash; no list to be
+            marketed to.
+          </p>
+        </div>
+        <form id="waitlist-form">
+          <div class="wl-who" role="radiogroup" aria-label="Which best describes you">
+            <label><input type="radio" name="who" value="got_logs" checked> I have logs</label>
+            <label><input type="radio" name="who" value="mill_or_buy"> I mill or buy logs</label>
+            <label><input type="radio" name="who" value="landowner"> I&rsquo;m a landowner</label>
+          </div>
+          <div class="wl-row">
+            <input id="wl-email" type="email" required autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+            <input id="wl-zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="ZIP (optional)" aria-label="ZIP code, optional">
+          </div>
+          <button id="wl-submit" class="cta" type="submit">Notify me</button>
+          <p id="wl-status" class="wl-status" role="status" aria-live="polite"></p>
+          <noscript><p class="wl-fine">This form needs JavaScript.</p></noscript>
+          <p class="wl-fine">Used only for that one announcement. See the privacy policy below.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-row">
+      <div>
+        <p><strong>timber.bid</strong> &mdash; tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
+        <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
+      </div>
+      <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a> &middot; <a href="/leaderboard">Leaderboard</a></p>
+    </div>
+  </footer>
+</div>
 
 <script src="/metrics.js" defer></script>
 <script src="/lots.js" defer></script>
 <script src="/waitlist.js" defer></script>
-
-<footer>
-  <div class="footer-inner">
-    <p><strong>timber.bid</strong> — tree services &amp; firewood marketplace &middot; lumber.bid is its sawmill &amp; lumber side</p>
-    <p>1603 Capitol Ave Ste 415 #100774, Cheyenne, WY 82001</p>
-    <p><a href="https://timber.bid/privacy">Privacy</a> &middot; <a href="https://timber.bid/terms">Terms</a></p>
-  </div>
-</footer>
-
 </body>
 </html>

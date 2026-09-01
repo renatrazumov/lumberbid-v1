@@ -126,7 +126,13 @@ the right stack the moment this surface carries real content.
 ```
 netlify.toml     publish config + security headers (CSP: default-src 'none',
                  plus script-src 'self' and connect-src to the Supabase project)
-site/index.html  the holding page — inline CSS, one deferred first-party script
+site/index.html  the landing page (rebuilt 2026-09-01) — inline CSS, fixed
+                 forest-green look, three deferred first-party scripts
+                 (metrics, lots, waitlist). The waitlist form ids and the
+                 .lot* classes are contracts with those scripts.
+site/lots.js     open-lots strip with lead photos — renders NOTHING at zero
+                 lots (honesty rule); anon enumerated-column read of listings,
+                 counterpart app/lumber/index.tsx; test/lots.test.mjs
 site/waitlist.js the first write this site makes (see contract below)
 site/metrics.js  the second write — first-party pageview/funnel beacons into
                  site_events (no PII, no vendor; the CSP admits nothing else).
