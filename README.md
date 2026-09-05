@@ -1,61 +1,71 @@
 # lumber.bid
 
-Holding page for **lumber.bid**, an official domain of [timber.bid](https://timber.bid).
+Front door for the lumber / sawmill side of [timber.bid](https://timber.bid).
+**Not a separate product or backend** — one Supabase project, one Stripe
+platform, one email chokepoint, shared with `timber.bid`, `wood.delivery`, and
+`timberbid.app`.
 
-## What this repo is (and is not)
+Live: https://lumber.bid · Netlify publishes `site/` after the contract suite
+(no npm / no bundler — plain Node).
 
-This is **not** the lumber vertical. It is a single static page whose job is to
-make the domain deployable, so that:
+## What this site does
 
-1. Netlify will accept the repo (it refuses to connect an empty one),
-2. lumber.bid's DNS can move from Namecheap parking to Netlify, and
-3. Resend's SPF / DKIM / DMARC records can be managed there for mailability.
+| Surface | Role |
+|---|---|
+| `/` | Appraiser-led homepage; waitlist; open-lots strip (renders nothing at zero lots) |
+| `/estimate` | Log value estimator — photo mode calls timberbid-v1 `estimate-log`; bands from `log-model.js` |
+| `/leaderboard` | Demoted (`noindex`) until the first real close with competing bids |
 
-The sawmill/lumber vertical itself is **deferred** — specced but not built. See
-`docs/lumber.md`, `docs/LUMBER_BID_TEMPLATE.md`, and
-`docs/business-models/MASTER_LUMBER_BID.md` in the `timberbid-v1` repo, plus
-PR #547, which parked this domain on purpose: a front door would promise a
-product that does not exist. The page here therefore states plainly that there
-is no marketplace yet, and links to timber.bid.
+Money, auth, sealed-bid deposits, fees, and payouts live in **timberbid-v1**.
+This site deep-links (`timber.bid/lumber`, `/lumber/post`, lot pages) and never
+reimplements them.
 
-## Why there is no build step
+## Shared-backend contracts
 
-`netlify.toml` publishes `site/` directly — no build command, no `package.json`,
-no Node version. A publish-only site cannot fail to deploy, which is the whole
-point while the deploy exists to unlock DNS. When the vertical ships, this
-becomes a real build (Astro, mirroring the `wooddelivery` repo) and the holding
-page is replaced.
+Every write/read that touches the core DB names its counterpart in a file
+header. Fixtures under `test/fixtures/` pin the shapes Netlify enforces
+before publish:
 
-## Conflict to be aware of
+| This repo | timberbid-v1 counterpart |
+|---|---|
+| `site/log-model.js` | `utils/logValuation.ts` |
+| `site/estimate.js` | `supabase/functions/estimate-log` |
+| `site/lots.js` | `app/lumber/index.tsx` |
+| `site/waitlist.js` | `wood_delivery_waitlist` (+ wooddelivery writer) |
+| `site/metrics.js` | migration `20260827235000` → `site_events` |
 
-`timberbid-v1`'s `public/_redirects` carries a merged rule from PR #547:
+Change a contract in both places (or three, for waitlist) — or neither.
 
-```
-https://lumber.bid/*  https://timber.bid/:splat  301!
-```
+## Honesty rule
 
-That rule only fires if lumber.bid is aliased onto the **timber.bid** Netlify
-site. Pointing the domain at **this** site instead means it never fires and
-stays dead code. Pick one:
-
-- **This site owns the domain** (current plan — needed for Netlify-managed DNS
-  and Resend records) → remove or annotate that rule in `timberbid-v1`.
-- **timber.bid owns the domain** → this repo stays unused and the 301 governs.
-
-## Structure
-
-```
-netlify.toml     publish config + security headers
-site/
-  index.html     the holding page (self-contained: inline CSS, no scripts)
-  robots.txt     noindex while it is a holding page
-```
+The lumber vertical may have **rails** without **liquidity**. Copy must not
+promise buyers, prices, or an open marketplace that does not exist yet.
 
 ## Rules
 
-- **No secrets, ever.** This is a public client with no backend of its own.
-  Never add a Supabase `service_role` key.
-- **Promise nothing.** The lumber marketplace does not exist. Copy here must not
-  imply listings, bidding, or signups until it does.
-- The CAN-SPAM postal address in the footer must stay accurate — this domain is
-  intended to send mail.
+- **No service-role key, ever.** Public anon client only; RLS/grants gate access.
+- Anon reads are **column-locked** — never `select('*')` or bare RETURNING.
+- Do not send cold mail from this domain (`timberbid.app` is outreach).
+- Fee math, Stripe, escrow, email queue → timberbid-v1 only.
+
+## Develop / test
+
+```bash
+# Same suite Netlify runs before every publish (no GitHub Actions)
+bash scripts/test.sh
+```
+
+No `npm install`. When this surface grows real content, Astro (mirroring
+`wood.delivery`) is the intended stack — not required while the site stays
+static.
+
+## Domain note
+
+`timberbid-v1/public/_redirects` still carries `lumber.bid → timber.bid` from
+PR #547. It is **inert**: lumber.bid is attached to this Netlify site, so that
+rule never fires. Kept on purpose if the domain is ever re-aliased.
+
+## Authority
+
+Operator brief: `CLAUDE.md` in this repo. When it disagrees with the main
+repo's `docs/LUMBERBID_REPO_BRIEF.md`, the main repo wins.
