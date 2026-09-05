@@ -5,7 +5,7 @@ must update both sides in the same change window.
 
 - [ ] Named the counterpart path in the PR description
 - [ ] Updated `test/fixtures/` if a shape / whitelist / golden changed
-- [ ] `for t in test/*.test.mjs; do node "$t"; done` passes locally
+- [ ] `bash scripts/test.sh` passes locally (Netlify runs the same before publish)
 
 ### Counterpart map
 

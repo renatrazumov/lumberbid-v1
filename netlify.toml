@@ -1,16 +1,15 @@
-# lumber.bid — static holding page.
+# lumber.bid — static front door on timber.bid's backend.
 #
-# NO BUILD STEP ON PURPOSE. This site exists to activate the Netlify site so
-# lumber.bid's DNS can be moved under Netlify management (and Resend's SPF/DKIM/
-# DMARC records added there). A publish-only site has no npm install, no Node
-# version, and no build command — so it cannot fail to deploy. When the sawmill/
-# lumber vertical actually ships, this becomes a real build (Astro, mirroring
-# wood.delivery) and the holding page is replaced.
+# Still no npm / Astro / bundler. The only "build" is the contract suite
+# (scripts/test.sh): plain Node, no install. A broken shared-contract pin
+# fails the Netlify deploy instead of shipping. When the lumber vertical
+# grows real content, this becomes a real Astro build (mirroring wood.delivery).
 #
-# There are no secrets in this repo and it must stay that way — it is a public
-# client with no backend of its own. NEVER add a Supabase service_role key.
+# No secrets in this repo — public client only. NEVER a Supabase service_role key.
+# No GitHub Actions on purpose — Netlify build minutes already gate deploys.
 
 [build]
+  command = "bash scripts/test.sh"
   publish = "site"
 
 [[headers]]

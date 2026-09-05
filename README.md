@@ -5,7 +5,8 @@ Front door for the lumber / sawmill side of [timber.bid](https://timber.bid).
 platform, one email chokepoint, shared with `timber.bid`, `wood.delivery`, and
 `timberbid.app`.
 
-Live: https://lumber.bid · Netlify publishes `site/` with **no build step**.
+Live: https://lumber.bid · Netlify publishes `site/` after the contract suite
+(no npm / no bundler — plain Node).
 
 ## What this site does
 
@@ -22,7 +23,8 @@ reimplements them.
 ## Shared-backend contracts
 
 Every write/read that touches the core DB names its counterpart in a file
-header. Fixtures under `test/fixtures/` pin the shapes CI enforces:
+header. Fixtures under `test/fixtures/` pin the shapes Netlify enforces
+before publish:
 
 | This repo | timberbid-v1 counterpart |
 |---|---|
@@ -49,12 +51,13 @@ promise buyers, prices, or an open marketplace that does not exist yet.
 ## Develop / test
 
 ```bash
-# All contract + behavior tests (also runs on GitHub Actions)
-for t in test/*.test.mjs; do node "$t"; done
+# Same suite Netlify runs before every publish (no GitHub Actions)
+bash scripts/test.sh
 ```
 
 No `npm install`. When this surface grows real content, Astro (mirroring
-`wood.delivery`) is the intended stack — not required while publish-only.
+`wood.delivery`) is the intended stack — not required while the site stays
+static.
 
 ## Domain note
 
