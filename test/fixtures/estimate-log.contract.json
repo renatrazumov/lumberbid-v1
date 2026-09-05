@@ -1,0 +1,70 @@
+{
+  "counterpart": "timberbid-v1:supabase/functions/estimate-log",
+  "fn_path": "/functions/v1/estimate-log",
+  "supabase_host": "uuzqezohkqgsbbxyzvvv.supabase.co",
+  "photo_request": {
+    "required_keys": [
+      "photos"
+    ]
+  },
+  "photo_response_success": {
+    "required_keys": [
+      "log_detected",
+      "species",
+      "species_confidence",
+      "small_end_diameter_in",
+      "length_ft",
+      "clear_faces",
+      "defects",
+      "metal_suspected"
+    ],
+    "optional_keys": [
+      "estimate_id",
+      "reference_object",
+      "figured_suspected",
+      "notes",
+      "reject_reason",
+      "error"
+    ]
+  },
+  "confirm_request": {
+    "required_keys": [
+      "estimate_id",
+      "confirmed",
+      "band"
+    ],
+    "confirmed_keys": [
+      "species",
+      "small_end_diameter_in",
+      "length_ft",
+      "clear_faces",
+      "defects",
+      "metal"
+    ],
+    "band_keys": [
+      "low",
+      "high",
+      "board_feet",
+      "log_rule",
+      "valuation_version"
+    ],
+    "optional_keys": [
+      "email"
+    ]
+  },
+  "example_success": {
+    "log_detected": true,
+    "estimate_id": "est_fixture_example",
+    "species": "walnut",
+    "species_confidence": "high",
+    "small_end_diameter_in": 20,
+    "length_ft": 12,
+    "clear_faces": true,
+    "defects": 0,
+    "metal_suspected": false
+  },
+  "example_reject": {
+    "log_detected": false,
+    "reject_reason": "No log visible \u2014 try another angle."
+  }
+}

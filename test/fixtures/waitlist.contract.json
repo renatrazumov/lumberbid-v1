@@ -1,0 +1,29 @@
+{
+  "counterpart": [
+    "timberbid-v1:app/wood-delivery/index.tsx",
+    "wooddelivery:src/lib/driveWaitlist.ts"
+  ],
+  "table": "wood_delivery_waitlist",
+  "lumber_writer": "site/waitlist.js",
+  "role_allowed": [
+    "driver",
+    "provider",
+    "buyer",
+    "interested"
+  ],
+  "lumber_insert": {
+    "role": "interested",
+    "source": "lumber.bid",
+    "prefer": "return=minimal",
+    "required_keys": [
+      "email",
+      "zip",
+      "role",
+      "note",
+      "source"
+    ],
+    "note_prefix": "lumber:"
+  },
+  "duplicate_status": 409,
+  "duplicate_means": "already on the list = success"
+}

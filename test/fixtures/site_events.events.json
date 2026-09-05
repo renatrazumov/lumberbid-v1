@@ -1,0 +1,16 @@
+{
+  "counterpart": "timberbid-v1:supabase/migrations/20260827235000_the_family_sites_learn_to_count_their_visitors.sql",
+  "site": "lumber.bid",
+  "table": "site_events",
+  "events": [
+    "pageview",
+    "estimate_photo_added",
+    "estimate_requested",
+    "estimate_returned",
+    "estimate_rejected",
+    "estimate_failed",
+    "estimate_corrected",
+    "waitlist_joined",
+    "outbound_app_click"
+  ]
+}
