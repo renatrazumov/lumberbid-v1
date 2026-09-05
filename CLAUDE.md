@@ -138,6 +138,11 @@ site/metrics.js  the second write — first-party pageview/funnel beacons into
                  site_events (no PII, no vendor; the CSP admits nothing else).
                  Counterpart: timberbid-v1 migration 20260827235000. Every
                  send is fire-and-forget: absent analytics change nothing.
+                 SELF-EXCLUSION: visit any page with ?nostats=1 to silence
+                 this browser for good (?nostats=0 undoes it) — one boolean in
+                 localStorage, never transmitted. Set it on every browser you
+                 test from; founder/QA traffic was ~a third of the first eight
+                 days. test/metrics.test.mjs pins both failure directions.
 site/estimate.html + estimate.js + log-model.js — the log value estimator
                  (photo mode calls timberbid-v1:estimate-log; see above).
                  log-model.js is a FAITHFUL PORT of timberbid-v1:utils/

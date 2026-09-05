@@ -82,7 +82,59 @@
 
   var SID = sessionId();
 
+  // ---- self-exclusion ---------------------------------------------------
+  // Founder and QA traffic drowns a funnel this small. Measured 2026-09-05:
+  // eight days of data held 21 pageviews, and roughly a third of them were
+  // this project's own render checks against the live site. A number you have
+  // to mentally subtract yourself from is not a number you will trust.
+  //
+  // Visit any lumber.bid page once with ?nostats=1 and this browser stops
+  // sending beacons for good; ?nostats=0 turns them back on. Per browser and
+  // per device, because the alternative is an identifier that follows someone
+  // between them — which this file exists to not have.
+  //
+  // Stored as a single boolean. No id, nothing that could fingerprint a
+  // visitor, nothing transmitted. Every access is wrapped: a browser that
+  // refuses storage (private window, blocked site data) keeps tracking
+  // normally, because silently killing ALL analytics is a far worse failure
+  // than counting one extra visit.
+  var OPT_OUT_KEY = 'lb_nostats';
+
+  function optedOut() {
+    try {
+      return localStorage.getItem(OPT_OUT_KEY) === '1';
+    } catch (e) {
+      return false; // storage refused → fail toward measuring
+    }
+  }
+
+  function applyOptOutParam() {
+    var m = /[?&]nostats=([01])/.exec(location.search || '');
+    if (!m) return;
+    try {
+      if (m[1] === '1') localStorage.setItem(OPT_OUT_KEY, '1');
+      else localStorage.removeItem(OPT_OUT_KEY);
+    } catch (e) {
+      return; // nothing to remember, so say nothing
+    }
+    // Toggling in silence gives you no way to confirm it worked. Guard the
+    // reference actually being called, not window.console — they are the same
+    // object in a browser, but checking one and calling the other is the kind
+    // of mismatch that only shows up somewhere unusual.
+    if (typeof console !== 'undefined' && console.log) {
+      console.log('lumber.bid analytics: ' + (m[1] === '1'
+        ? 'OFF for this browser. Visit ?nostats=0 to turn it back on.'
+        : 'ON for this browser.'));
+    }
+  }
+
+  applyOptOutParam();
+  // Read once, after the parameter has had its say — so the very visit that
+  // opts out is itself not counted.
+  var OPTED_OUT = optedOut();
+
   function track(event, meta) {
+    if (OPTED_OUT) return;
     if (EVENTS.indexOf(event) === -1) return;
     var body = {
       site: 'lumber.bid',
