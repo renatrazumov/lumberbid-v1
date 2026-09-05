@@ -21,11 +21,20 @@
 <meta property="og:title" content="lumber.bid — what is your log worth?">
 <meta property="og:description" content="Photo to species, board feet, grade, and an honest value band. Sealed sales for the logs that are worth it.">
 <meta property="og:url" content="https://lumber.bid/">
-<!-- No og:image on purpose. The old one was the live leaderboard record card,
-     which made every share of the FRONT DOOR claim a most-expensive-wood
-     record on a site with zero sales. A text preview beats a false identity;
-     restore an image here when there is a true one to show. -->
-<meta name="twitter:card" content="summary">
+<!-- The share card is the site's identity, rendered by timberbid-v1's og-image
+     edge fn (type=lumber_home, deployed v38 2026-09-01): "What is your log
+     worth?" on the family green. Static copy, no query, so it can never claim
+     a market fact. Its predecessor here was the live leaderboard RECORD card,
+     which made every share of the front door assert a most-expensive-wood
+     record on a site with zero sales; between the two, the page carried no
+     image at all, because a text preview beats a false identity.
+     Counterpart: timberbid-v1:supabase/functions/og-image/index.ts. -->
+<meta property="og:image" content="https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/og-image?type=lumber_home">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="lumber.bid: What is your log worth? Photo to species, board feet, grade, and an honest value band.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://uuzqezohkqgsbbxyzvvv.supabase.co/functions/v1/og-image?type=lumber_home">
 
 <!-- Inline SVG favicon: no external request, so the strict CSP holds. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E7D32'/%3E%3Cpath d='M16 6l7 12H9z' fill='%23fff'/%3E%3Crect x='14.5' y='17' width='3' height='9' fill='%23fff'/%3E%3C/svg%3E">
