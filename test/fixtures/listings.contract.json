@@ -1,0 +1,32 @@
+{
+  "counterpart": "timberbid-v1:app/lumber/index.tsx",
+  "table": "listings",
+  "columns": [
+    "id",
+    "title",
+    "species",
+    "images",
+    "auction_status",
+    "auction_ends_at",
+    "auction_starting_bid_cents",
+    "auction_bid_count",
+    "auction_mode",
+    "auction_current_bid_cents",
+    "location",
+    "estimated_board_feet",
+    "metal_risk"
+  ],
+  "filters": {
+    "listing_type": "raw_timber",
+    "sale_type": "auction",
+    "auction_status_in": [
+      "live",
+      "closing"
+    ]
+  },
+  "order": "auction_ends_at.asc",
+  "limit": 6,
+  "lot_deep_link_prefix": "https://timber.bid/lumber/",
+  "board_deep_link": "https://timber.bid/lumber",
+  "seal_rule": "auction_current_bid_cents is shown only when auction_mode === 'open'"
+}

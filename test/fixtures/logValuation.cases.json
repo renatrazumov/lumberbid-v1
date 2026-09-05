@@ -1,0 +1,239 @@
+{
+  "counterpart": "timberbid-v1:utils/logValuation.ts",
+  "valuation_version": "2026-08-21-appalachian-doyle",
+  "note": "Golden outputs from site/log-model.js.",
+  "cases": [
+    {
+      "name": "walnut flagship",
+      "input": {
+        "species": "walnut",
+        "smallEndDiameterIn": 20,
+        "lengthFt": 12,
+        "rule": "doyle",
+        "clear": true,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.3
+      },
+      "expect": {
+        "boardFeet": 192,
+        "grade": "grade1",
+        "tier": "premium",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 175,
+          "high": 292
+        },
+        "extractionCost": 255,
+        "netValueBand": {
+          "low": -80,
+          "high": 37
+        }
+      }
+    },
+    {
+      "name": "veneer candidate",
+      "input": {
+        "species": "black walnut",
+        "smallEndDiameterIn": 24,
+        "lengthFt": 16,
+        "rule": "doyle",
+        "clear": true,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.2
+      },
+      "expect": {
+        "boardFeet": 400,
+        "grade": "veneer",
+        "tier": "premium",
+        "route": "lumber",
+        "grossValueBand": {
+          "low": 1800,
+          "high": 3000
+        },
+        "extractionCost": 207,
+        "netValueBand": {
+          "low": 1593,
+          "high": 2793
+        }
+      }
+    },
+    {
+      "name": "under diameter firewood",
+      "input": {
+        "species": "oak",
+        "smallEndDiameterIn": 8,
+        "lengthFt": 10,
+        "rule": "doyle",
+        "clear": false,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.3
+      },
+      "expect": {
+        "boardFeet": 10,
+        "grade": "below_grade",
+        "tier": "premium",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 0,
+          "high": 0
+        },
+        "extractionCost": 0,
+        "netValueBand": {
+          "low": 0,
+          "high": 0
+        }
+      }
+    },
+    {
+      "name": "short length firewood",
+      "input": {
+        "species": "cherry",
+        "smallEndDiameterIn": 16,
+        "lengthFt": 6,
+        "rule": "doyle",
+        "clear": true,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.3
+      },
+      "expect": {
+        "boardFeet": 54,
+        "grade": "below_grade",
+        "tier": "premium",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 0,
+          "high": 0
+        },
+        "extractionCost": 0,
+        "netValueBand": {
+          "low": 0,
+          "high": 0
+        }
+      }
+    },
+    {
+      "name": "stumpage discount",
+      "input": {
+        "species": "white oak",
+        "smallEndDiameterIn": 18,
+        "lengthFt": 14,
+        "rule": "doyle",
+        "clear": true,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": false,
+        "harvestDifficulty": 0.4
+      },
+      "expect": {
+        "boardFeet": 172,
+        "grade": "grade1",
+        "tier": "premium",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 65,
+          "high": 108
+        },
+        "extractionCost": 302,
+        "netValueBand": {
+          "low": -237,
+          "high": -194
+        }
+      }
+    },
+    {
+      "name": "metal caps grade",
+      "input": {
+        "species": "hard maple",
+        "smallEndDiameterIn": 20,
+        "lengthFt": 12,
+        "rule": "doyle",
+        "clear": true,
+        "defects": 0,
+        "metalSuspected": true,
+        "delivered": true,
+        "harvestDifficulty": 0.3
+      },
+      "expect": {
+        "boardFeet": 192,
+        "grade": "grade3",
+        "tier": "premium",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 45,
+          "high": 75
+        },
+        "extractionCost": 255,
+        "netValueBand": {
+          "low": -210,
+          "high": -180
+        }
+      }
+    },
+    {
+      "name": "intl rule",
+      "input": {
+        "species": "red oak",
+        "smallEndDiameterIn": 16,
+        "lengthFt": 12,
+        "rule": "intl",
+        "clear": false,
+        "defects": 1,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.5
+      },
+      "expect": {
+        "boardFeet": 135,
+        "grade": "grade2",
+        "tier": "high",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 43,
+          "high": 71
+        },
+        "extractionCost": 300,
+        "netValueBand": {
+          "low": -257,
+          "high": -229
+        }
+      }
+    },
+    {
+      "name": "empty species conservative",
+      "input": {
+        "species": "",
+        "smallEndDiameterIn": 14,
+        "lengthFt": 10,
+        "rule": "doyle",
+        "clear": false,
+        "defects": 0,
+        "metalSuspected": false,
+        "delivered": true,
+        "harvestDifficulty": 0.3
+      },
+      "expect": {
+        "boardFeet": 63,
+        "grade": "grade2",
+        "tier": "utility",
+        "route": "firewood",
+        "grossValueBand": {
+          "low": 9,
+          "high": 14
+        },
+        "extractionCost": 182,
+        "netValueBand": {
+          "low": -173,
+          "high": -168
+        }
+      }
+    }
+  ]
+}
