@@ -35,7 +35,7 @@ The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
 Read it before building anything here.
 
-## Current state (2026-08-13)
+## Current state (2026-09-06)
 
 | | |
 |---|---|
@@ -44,9 +44,28 @@ Read it before building anything here.
 | Build | **none** — `netlify.toml` publishes `site/` with no build command |
 | Resend | **verified**; receiving **OFF** (no apex MX); sends nothing |
 | Waitlist | **LIVE** — `site/waitlist.js` inserts `role='interested'`, `source='lumber.bid'` |
-| Product | **sealed-bid RAILS LIVE in prod** (migration `20260821003609`, 2026-08-21) — app surfaces + buyer liquidity still pending; first sales broker-run |
+| Product | **sealed-bid RAILS LIVE in prod** (migration `20260821003609`) — and **zero lumber lots have ever existed**. The 6 auction rows in prod are all firewood. |
+| Selling | **LIVE in the app**, linked from the homepage since 2026-09-06: fixed-price walk at `timber.bid/lumber/sell` (photo + price + contact), AI drafting from photos, bulk lumber in NHLA grades priced per MBF, and a single-use claim link by email |
 | Estimator | **LIVE** at `/estimate` — `site/log-model.js` (port of `utils/logValuation.ts`, 27/27 cross-checked) |
 | SEO | **indexed** as of 2026-08-21 (noindex lifted — real content shipped); `sitemap.xml` with 2 URLs |
+| Traffic | **38 pageviews, 28 Aug – 6 Sep**, founder traffic excluded. Everything downstream is zero: no estimate saved, no lead captured, no listing, no order. |
+
+### What the numbers said on 2026-09-06
+
+The full status and the phased plan are in
+`docs/lumber-bid-status-2026-09-06.pdf`; the platform-wide audit that produced
+them is `timberbid-v1:docs/AUDIT_2026-09-06_PLATFORM.md`. The two things worth
+carrying in your head:
+
+1. **The build is not the constraint.** Capture, escrow, fee math and seven
+   funnel beacons are all live. They have never fired because six people have
+   opened `/estimate` and none of them finished. Do not add capability to fix a
+   demand problem.
+2. **The homepage sold the auction and hid the seller walk** until 2026-09-06.
+   The auction has had no lots in its lifetime; the fixed-price path works
+   today. The primary button now points at the one a visitor can finish, and
+   that ordering is deliberate — do not quietly restore the auction to the
+   primary slot before a lot has actually closed.
 
 ## The honesty rule — this is the one that gets broken
 
@@ -133,11 +152,19 @@ site/index.html  the landing page (rebuilt 2026-09-01) — inline CSS, fixed
 site/lots.js     open-lots strip with lead photos — renders NOTHING at zero
                  lots (honesty rule); anon enumerated-column read of listings,
                  counterpart app/lumber/index.tsx; test/lots.test.mjs
-site/waitlist.js the first write this site makes (see contract below)
+site/waitlist.js the first write this site makes (see contract below). Also
+                 exports window.lumberWaitlistSubmit for the /estimate lead ask,
+                 on purpose: a fourth writer of this shared table inside one
+                 repo would be exactly the drift its header warns about.
 site/metrics.js  the second write — first-party pageview/funnel beacons into
                  site_events (no PII, no vendor; the CSP admits nothing else).
                  Counterpart: timberbid-v1 migration 20260827235000. Every
                  send is fire-and-forget: absent analytics change nothing.
+                 EVENTS: pageview, outbound_app_click, estimate_shown (manual
+                 calculator, once per visit, carries lumber-vs-firewood),
+                 estimate_requested/_returned/_rejected/_failed/_photo_added,
+                 estimate_corrected, waitlist_joined. As of 2026-09-06 only
+                 pageview and outbound_app_click have ever fired in prod.
                  SELF-EXCLUSION: visit any page with ?nostats=1 to silence
                  this browser for good (?nostats=0 undoes it) — one boolean in
                  localStorage, never transmitted. Set it on every browser you

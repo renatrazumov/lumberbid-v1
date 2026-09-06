@@ -72,7 +72,23 @@
     out.hidden = false;
   }
 
-  form.addEventListener('input', render);
+  // Did the visitor actually drive the calculator, and what did it tell them?
+  // Once per page, never for the on-load default, and it carries the verdict:
+  // "worth milling" vs "this is firewood" is the number that decides whether
+  // /estimate deserves more traffic. Guarded like every other beacon here —
+  // absent analytics must change nothing.
+  var manualTracked = false;
+  function trackManualEstimate() {
+    if (manualTracked || out.hidden) return;
+    manualTracked = true;
+    if (typeof window.lbTrack !== 'function') return;
+    try {
+      var v = M.valueLog(read());
+      window.lbTrack('estimate_shown', { mode: 'manual', route: v.route });
+    } catch (e) { /* a lost beacon is a lost beacon */ }
+  }
+
+  form.addEventListener('input', function () { render(); trackManualEstimate(); });
   form.addEventListener('submit', function (ev) { ev.preventDefault(); render(); });
   render(); // walnut default renders immediately — the flagship case on load
 
