@@ -1,0 +1,12 @@
+# core.autocrlf is true on the founder's machine, and git was about to run a
+# binary PDF through line-ending normalisation. A mangled PDF is a PDF that
+# will not open, and nothing would have said so until someone tried.
+*.pdf binary
+*.png binary
+*.jpg binary
+
+# The site is served byte-for-byte by Netlify; keep it LF everywhere.
+*.html text eol=lf
+*.js   text eol=lf
+*.css  text eol=lf
+*.md   text eol=lf

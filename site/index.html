@@ -191,6 +191,20 @@
 
   .split { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 2.5rem; align-items: start; margin-top: 1.5rem; }
   @media (max-width: 800px) { .split { grid-template-columns: 1fr; gap: 1.6rem; } }
+  /* The open door. Same surface tokens as .fact so it reads as part of the
+     page, with a brand edge because it is the one thing here a visitor can
+     finish today. */
+  .sell-open { background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--brand); border-radius: 14px;
+    padding: 1.4rem 1.5rem; margin: 1.4rem 0 2.4rem; }
+  .sell-open h3 { font-family: var(--display); font-size: 1.5rem; line-height: 1.2;
+    margin: 0 0 .6rem; color: var(--text); }
+  .sell-open p { color: var(--muted); font-size: 1.02rem; margin: 0 0 1.2rem; max-width: 44rem; }
+  .sell-open p strong { color: var(--text); }
+  .sell-open .ctas { margin-bottom: 0; }
+  .sell-next { font-family: var(--display); font-size: 1.5rem; line-height: 1.2;
+    margin: 0 0 1.1rem; color: var(--text); }
+
   .terms { list-style: none; padding: 0; margin: 1.2rem 0 1.6rem; display: grid; gap: .55rem; }
   /* Block, not flex: a flex <li> turned its inline <strong> and <span> into
      separate columns ("Free to / post." broke apart). The dash is positioned
@@ -383,8 +397,25 @@
          (SELLER_FEE_RATE = 0.025, verified 2026-08-27). If that constant
          changes, this sentence changes. -->
     <section class="block" id="sell">
-      <span class="eyebrow">Sell your logs</span>
-      <h2>Sealed bids, a public bid sheet, and money that actually moves</h2>
+      <span class="eyebrow">Sell your wood</span>
+      <h2>Two ways to sell, and one of them is open right now</h2>
+
+      <div class="sell-open">
+        <h3>Milled wood, at your price</h3>
+        <p>
+          Slabs, burls, beams &mdash; or a lift of graded lumber sold by the
+          board foot. <strong>A photo and a price is the whole listing.</strong>
+          The photos fill in species, figure, defects and size and you check
+          them, so a piece takes about a minute. Free to list,
+          <span class="money num">2.5%</span> only when it sells, and the
+          buyer&rsquo;s payment is held until they have the wood.
+        </p>
+        <div class="ctas">
+          <a class="cta" href="https://timber.bid/lumber/sell">List a piece or a lot &rarr;</a>
+        </div>
+      </div>
+
+      <h3 class="sell-next">Standing timber and sawlogs, by sealed bid</h3>
       <div class="split">
         <div>
           <p class="intro">
@@ -400,7 +431,7 @@
             <li>Settlement on timber.bid&rsquo;s escrow engine. A won lot is a funded deal, not a handshake.</li>
           </ul>
           <div class="ctas">
-            <a class="cta" href="https://timber.bid/lumber/post">Post a timber lot &rarr;</a>
+            <a class="cta ghost" href="https://timber.bid/lumber/post">Post a timber lot &rarr;</a>
             <a class="cta ghost" href="https://timber.bid/lumber">Browse the lot board</a>
           </div>
           <div class="status">
