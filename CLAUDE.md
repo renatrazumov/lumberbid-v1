@@ -38,7 +38,10 @@ Read it before building anything here.
 The living plan for *this* repo — phases, the 6 September numbers, and the
 7 September review of `/`, `/estimate`, and `mcp.timber.bid` — is
 `docs/MASTER_PLAN.md`. The PDF next to it is the production snapshot that
-opened Phase B; extend the markdown.
+opened Phase B; extend the markdown. The business plan for agent MCP
+(where to call it, what to build, security, lumber.bid focus) is
+`docs/MCP_AGENT_PLAN.md`. That work belongs in timberbid-v1. This site
+does not grow an MCP client.
 
 ## Current state (2026-09-07)
 
@@ -135,8 +138,12 @@ reimplements any of that.
   learning that.
 - **`mcp.timber.bid` is not a lumber API and not a conversation.** It is the
   tree/firewood MCP (estimates, open jobs, providers, order status,
-  `request_human_contact`). No log estimate, no lots, no mail to Woody, no
-  live human. See `docs/MASTER_PLAN.md` § Channels.
+  `request_human_contact`). Same server as `timber.bid/mcp`. Call it from
+  the agent runtime (`mcp.json` → `https://mcp.timber.bid`), never from
+  this site’s JavaScript (CSP and MCP CORS both forbid it). No log
+  estimate, no lots, no mail to Woody, no live human. Builder tools (status,
+  contracts, invariants) are the gap — timberbid-v1, keyed, READ only.
+  See `docs/MCP_AGENT_PLAN.md`.
 
 ## The redirect in timberbid-v1 is inert — do not "fix" it
 

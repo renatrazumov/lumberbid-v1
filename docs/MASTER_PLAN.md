@@ -8,6 +8,8 @@ opened Phase B. This file is the one to extend. When it disagrees with
 The rails are finished. The market has not started. Do not add capability
 to fix a demand problem.
 
+Agent MCP (consumer vs builder, where to call, security): `docs/MCP_AGENT_PLAN.md`.
+
 ---
 
 ## Phases
@@ -291,3 +293,25 @@ does not have to rediscover it.
 To talk to a person at the company, use the founder’s existing channels
 (the Cursor thread, GitHub, the private repo). Do not invent a new one
 on this domain.
+
+---
+
+## Agent MCP — what to build, where to call it
+
+The 7 September review found a live consumer MCP and no builder MCP.
+The business plan, integration map, security analysis, and lumber.bid
+focus sit in [`docs/MCP_AGENT_PLAN.md`](MCP_AGENT_PLAN.md).
+
+Short version, so this file still decides:
+
+- **Call** `https://mcp.timber.bid` (same server as `https://timber.bid/mcp`).
+  From the agent runtime — Cursor `mcp.json`, Claude, cloud agent
+  environments — not from lumber.bid JavaScript.
+- **Build next, in timberbid-v1:** (1) actually point founder and cloud
+  agents at the live server; (2) keyed READ tools for platform status,
+  contracts, invariants, event whitelist, front-door CTA; (3) treat
+  `agent_audit_events` as the research feed. Lumber consumer tools wait
+  on a reason that is not an empty homepage.
+- **lumber.bid focus is still Phase B.** Optional static `llms.txt` that
+  tells crawling models the truth. No chat widget, no second MCP, no
+  service-role, no auction back on the primary button.
