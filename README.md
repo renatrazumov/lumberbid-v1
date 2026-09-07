@@ -65,7 +65,19 @@ static.
 PR #547. It is **inert**: lumber.bid is attached to this Netlify site, so that
 rule never fires. Kept on purpose if the domain is ever re-aliased.
 
+## Plan
+
+Phased plan, the 6 September production numbers, and the 7 September
+review of `/`, `/estimate`, and `mcp.timber.bid`: [`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md).
+The PDF next to it is the snapshot that opened Phase B.
+
+Agent MCP — where to call it, what to build for consumer vs builder
+agents, security, and lumber.bid focus: [`docs/MCP_AGENT_PLAN.md`](docs/MCP_AGENT_PLAN.md).
+Canonical URL: `https://mcp.timber.bid` (alias `https://timber.bid/mcp`).
+Call it from Cursor/Claude/cloud agents, not from this site.
+
 ## Authority
 
-Operator brief: `CLAUDE.md` in this repo. When it disagrees with the main
-repo's `docs/LUMBERBID_REPO_BRIEF.md`, the main repo wins.
+Operator brief: `CLAUDE.md` in this repo. Living plan: `docs/MASTER_PLAN.md`.
+When either disagrees with the main repo's `docs/LUMBERBID_REPO_BRIEF.md`,
+the main repo wins.
