@@ -35,7 +35,12 @@ The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
 Read it before building anything here.
 
-## Current state (2026-09-06)
+The living plan for *this* repo — phases, the 6 September numbers, and the
+7 September review of `/`, `/estimate`, and `mcp.timber.bid` — is
+`docs/MASTER_PLAN.md`. The PDF next to it is the production snapshot that
+opened Phase B; extend the markdown.
+
+## Current state (2026-09-07)
 
 | | |
 |---|---|
@@ -50,22 +55,30 @@ Read it before building anything here.
 | SEO | **indexed** as of 2026-08-21 (noindex lifted — real content shipped); `sitemap.xml` with 2 URLs |
 | Traffic | **38 pageviews, 28 Aug – 6 Sep**, founder traffic excluded. Everything downstream is zero: no estimate saved, no lead captured, no listing, no order. |
 
-### What the numbers said on 2026-09-06
+### What the numbers said on 2026-09-06, and what the 7 September review added
 
-The full status and the phased plan are in
-`docs/lumber-bid-status-2026-09-06.pdf`; the platform-wide audit that produced
-them is `timberbid-v1:docs/AUDIT_2026-09-06_PLATFORM.md`. The two things worth
-carrying in your head:
+The production snapshot is `docs/lumber-bid-status-2026-09-06.pdf`; the
+phased plan and the review of the live pages sit in `docs/MASTER_PLAN.md`.
+The platform-wide audit is `timberbid-v1:docs/AUDIT_2026-09-06_PLATFORM.md`.
+The two things worth carrying in your head have not changed:
 
-1. **The build is not the constraint.** Capture, escrow, fee math and seven
-   funnel beacons are all live. They have never fired because six people have
+1. **The build is not the constraint.** Capture, escrow, fee math and the
+   funnel beacons are live. They have never fired because six people have
    opened `/estimate` and none of them finished. Do not add capability to fix a
-   demand problem.
+   demand problem. Phase B is asking seventeen mills, by hand, from
+   `timberbid.app`.
 2. **The homepage sold the auction and hid the seller walk** until 2026-09-06.
    The auction has had no lots in its lifetime; the fixed-price path works
-   today. The primary button now points at the one a visitor can finish, and
-   that ordering is deliberate — do not quietly restore the auction to the
+   today. The primary button in `#sell` points at `timber.bid/lumber/sell`,
+   and that ordering is deliberate — do not quietly restore the auction to the
    primary slot before a lot has actually closed.
+
+One correction the 6 September write-up did not survive: `estimate_shown` is
+**called** from `site/estimate.js` and **dropped** by the `EVENTS` whitelist
+in `site/metrics.js` (and is absent from the migration CHECK). Production
+still cannot tell a visitor who used the manual calculator from one who
+bounced at the photo boxes. Close that counterpart window before treating a
+zero count as “those six visits were crawlers.” Details in the master plan.
 
 ## The honesty rule — this is the one that gets broken
 
@@ -120,6 +133,10 @@ reimplements any of that.
 - **Do not enable Resend receiving.** An inbox nobody answers is worse than no
   inbox — `woody@timber.bid` accumulated 29 unanswered messages over 510 hours
   learning that.
+- **`mcp.timber.bid` is not a lumber API and not a conversation.** It is the
+  tree/firewood MCP (estimates, open jobs, providers, order status,
+  `request_human_contact`). No log estimate, no lots, no mail to Woody, no
+  live human. See `docs/MASTER_PLAN.md` § Channels.
 
 ## The redirect in timberbid-v1 is inert — do not "fix" it
 
@@ -160,11 +177,15 @@ site/metrics.js  the second write — first-party pageview/funnel beacons into
                  site_events (no PII, no vendor; the CSP admits nothing else).
                  Counterpart: timberbid-v1 migration 20260827235000. Every
                  send is fire-and-forget: absent analytics change nothing.
-                 EVENTS: pageview, outbound_app_click, estimate_shown (manual
-                 calculator, once per visit, carries lumber-vs-firewood),
-                 estimate_requested/_returned/_rejected/_failed/_photo_added,
-                 estimate_corrected, waitlist_joined. As of 2026-09-06 only
-                 pageview and outbound_app_click have ever fired in prod.
+                 EVENTS whitelist (must match migration 20260827235000):
+                 pageview, outbound_app_click, estimate_requested/_returned/
+                 _rejected/_failed/_photo_added, estimate_corrected,
+                 waitlist_joined. As of 2026-09-06 only pageview and
+                 outbound_app_click have ever fired in prod.
+                 estimate_shown is emitted by estimate.js on first manual
+                 input (lumber-vs-firewood) but is NOT in this whitelist —
+                 the client drops it. Add it here, in the fixture, and in
+                 the migration CHECK in the same window, or not at all.
                  SELF-EXCLUSION: visit any page with ?nostats=1 to silence
                  this browser for good (?nostats=0 undoes it) — one boolean in
                  localStorage, never transmitted. Set it on every browser you

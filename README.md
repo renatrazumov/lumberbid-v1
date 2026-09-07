@@ -65,7 +65,14 @@ static.
 PR #547. It is **inert**: lumber.bid is attached to this Netlify site, so that
 rule never fires. Kept on purpose if the domain is ever re-aliased.
 
+## Plan
+
+Phased plan, the 6 September production numbers, and the 7 September
+review of `/`, `/estimate`, and `mcp.timber.bid`: [`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md).
+The PDF next to it is the snapshot that opened Phase B.
+
 ## Authority
 
-Operator brief: `CLAUDE.md` in this repo. When it disagrees with the main
-repo's `docs/LUMBERBID_REPO_BRIEF.md`, the main repo wins.
+Operator brief: `CLAUDE.md` in this repo. Living plan: `docs/MASTER_PLAN.md`.
+When either disagrees with the main repo's `docs/LUMBERBID_REPO_BRIEF.md`,
+the main repo wins.
