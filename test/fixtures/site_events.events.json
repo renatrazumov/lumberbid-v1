@@ -4,6 +4,7 @@
   "table": "site_events",
   "events": [
     "pageview",
+    "estimate_shown",
     "estimate_photo_added",
     "estimate_requested",
     "estimate_returned",
@@ -12,5 +13,6 @@
     "estimate_corrected",
     "waitlist_joined",
     "outbound_app_click"
-  ]
+  ],
+  "counterpart_amended": "timberbid-v1:supabase/migrations/20260910175457_the_calculator_finally_reports.sql (adds estimate_shown)"
 }

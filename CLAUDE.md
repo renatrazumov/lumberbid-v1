@@ -76,12 +76,18 @@ The two things worth carrying in your head have not changed:
    and that ordering is deliberate — do not quietly restore the auction to the
    primary slot before a lot has actually closed.
 
-One correction the 6 September write-up did not survive: `estimate_shown` is
-**called** from `site/estimate.js` and **dropped** by the `EVENTS` whitelist
-in `site/metrics.js` (and is absent from the migration CHECK). Production
-still cannot tell a visitor who used the manual calculator from one who
-bounced at the photo boxes. Close that counterpart window before treating a
-zero count as “those six visits were crawlers.” Details in the master plan.
+One correction the 6 September write-up did not survive, **CLOSED 2026-09-10**:
+`estimate_shown` was **called** from `site/estimate.js` and **dropped** by the
+`EVENTS` whitelist in `site/metrics.js`, and was absent from the migration
+CHECK as well — both gates shut, so the event had never existed in either
+direction. It is now in all three (server first: timberbid-v1 ledger
+`20260910175457_the_calculator_finally_reports`, then this repo's whitelist and
+`test/fixtures/site_events.events.json`). Until 09-10 production could not tell
+a visitor who used the manual calculator from one who bounced at the photo
+boxes, so **every `estimate_shown` count before 2026-09-10 is a structural
+zero, not a measurement** — do not read the old zero as “those visits were
+crawlers”, and do not read the new counts back across that date. Details in the
+master plan.
 
 ## The honesty rule — this is the one that gets broken
 
@@ -184,15 +190,21 @@ site/metrics.js  the second write — first-party pageview/funnel beacons into
                  site_events (no PII, no vendor; the CSP admits nothing else).
                  Counterpart: timberbid-v1 migration 20260827235000. Every
                  send is fire-and-forget: absent analytics change nothing.
-                 EVENTS whitelist (must match migration 20260827235000):
-                 pageview, outbound_app_click, estimate_requested/_returned/
-                 _rejected/_failed/_photo_added, estimate_corrected,
-                 waitlist_joined. As of 2026-09-06 only pageview and
-                 outbound_app_click have ever fired in prod.
+                 EVENTS whitelist (must match migration 20260827235000,
+                 as widened by 20260910175457):
+                 pageview, estimate_shown, outbound_app_click,
+                 estimate_requested/_returned/_rejected/_failed/_photo_added,
+                 estimate_corrected, waitlist_joined. As of 2026-09-10 only
+                 pageview and outbound_app_click have ever fired in prod
+                 (39 pageviews and 1 click in the preceding 7 days).
                  estimate_shown is emitted by estimate.js on first manual
-                 input (lumber-vs-firewood) but is NOT in this whitelist —
-                 the client drops it. Add it here, in the fixture, and in
-                 the migration CHECK in the same window, or not at all.
+                 input (lumber-vs-firewood) and was added to this whitelist,
+                 the fixture and the migration CHECK on 2026-09-10 — it had
+                 been dropped by all three since it shipped. The three move
+                 together or not at all, and the SERVER moves first: a
+                 widening is safe early, and the reverse order silently
+                 drops the first visitors after a deploy.
+                 test/metrics-events.test.mjs pins this list to the fixture.
                  SELF-EXCLUSION: visit any page with ?nostats=1 to silence
                  this browser for good (?nostats=0 undoes it) — one boolean in
                  localStorage, never transmitted. Set it on every browser you
