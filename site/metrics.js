@@ -45,6 +45,15 @@
   // the two lists honest about being one list.
   var EVENTS = [
     'pageview',
+    // Added 2026-09-10 with its counterpart CHECK (timberbid-v1 ledger
+    // 20260910175457_the_calculator_finally_reports). estimate.js has emitted
+    // this on first manual input since it shipped and this list dropped it, so
+    // production could not tell a visitor who used the calculator from one who
+    // bounced at the photo boxes — 39 pageviews over the 7 days to 2026-09-10
+    // with zero estimate events read identically to 39 crawlers. The server
+    // CHECK was widened FIRST, so this line cannot outrun what the table
+    // accepts.
+    'estimate_shown',
     'estimate_photo_added',
     'estimate_requested',
     'estimate_returned',

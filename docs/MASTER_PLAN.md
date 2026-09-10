@@ -24,7 +24,7 @@ on 7 September (see [Review, 7 September 2026](#review-7-september-2026)).
 | Homepage sell section leads with `/lumber/sell` | The working flow was unreachable from the front door | Shipped |
 | Headline is the appraisal, not the auction | Money path is “what is this log worth?” | Shipped 27 Aug |
 | Estimator capture step (email ask + confirm path) | Attach a lead to a log, or fall back to the waitlist | Already there |
-| `estimate_shown` on the manual calculator | The only unmeasured path; carries lumber-vs-firewood | **Called, not recorded** — see finding 1 |
+| `estimate_shown` on the manual calculator | The only unmeasured path; carries lumber-vs-firewood | **RECORDING since 2026-09-10** — was called-not-recorded; see finding 1 |
 
 ### Phase B — get one seller, by hand
 
@@ -139,7 +139,21 @@ card for it.
 
 **Sitemap `lastmod` for `/estimate` is still 2026-08-21.** Cosmetic.
 
-### Finding 1 — `estimate_shown` is emitted and then dropped
+### Finding 1 — `estimate_shown` is emitted and then dropped — **CLOSED 2026-09-10**
+
+**Resolution (Larch, 2026-09-10).** All three gates are open, server first:
+timberbid-v1 ledger `20260910175457_the_calculator_finally_reports` widens the
+CHECK (its self-test writes the event as `anon` and still refuses an unlisted
+one), then `site/metrics.js` `EVENTS` and
+`test/fixtures/site_events.events.json` in this repo, pinned to each other by
+`test/metrics-events.test.mjs`. The finding below is kept as written because
+the reasoning is the reusable part — a beacon can be live, committed,
+documented as shipped, and still never leave the browser.
+
+One thing the resolution adds: every `estimate_shown` count **before**
+2026-09-10 is a structural zero, not a measurement, so the series does not
+join across that date. The 6 September decision rule starts collecting on
+09-10, not retroactively.
 
 This is the one engineering remainder of Phase A. It is not new
 capability. It is the watch metric the 6 September plan named, and it is
@@ -236,8 +250,10 @@ that is not “the homepage looks unfinished.”
 None of these reopen Phase C. The first one finishes Phase A. The rest
 are copy and one-line gates, or they are Phase B itself.
 
-1. **Land `estimate_shown` for real.** Counterpart window above. Until
-   then the 6 September decision rule is fiction.
+1. ~~**Land `estimate_shown` for real.** Counterpart window above. Until
+   then the 6 September decision rule is fiction.~~ **DONE 2026-09-10** —
+   all three sides landed in one window (finding 1). Phase A is finished;
+   the decision rule now has an input, starting from that date.
 2. **Do Phase B.** Seventeen mills, by hand, from `timberbid.app`.
    Offer to list their wood from photos they already have. The first
    listing can be founder-entered. Watch `slab_seller_leads` and
