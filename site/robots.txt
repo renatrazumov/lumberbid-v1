@@ -5,4 +5,10 @@
 User-agent: *
 Allow: /
 
+# The machine-readable summary for AI answer engines and agents. Explicitly
+# allowed so a crawler that respects robots can always reach it; the parent
+# manifest at https://timber.bid/llms.txt is canonical for money, auth and the
+# MCP server. Counterpart: timberbid-v1:public/llms.txt.
+Allow: /llms.txt
+
 Sitemap: https://lumber.bid/sitemap.xml
