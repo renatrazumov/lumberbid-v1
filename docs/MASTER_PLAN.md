@@ -14,10 +14,13 @@ When this disagrees with `timberbid-v1:docs/LUMBERBID_REPO_BRIEF.md`,
 the main-repo brief wins.
 
 **Current posture (13 September 2026):** Phase A is finished. The site
-is honest, measurable, and reachable. The market still has not started —
-zero lumber lots, zero seller leads, zero waitlist signups from this
-domain. Do not add capability to fix a demand problem. Phase B is the
-work: one real seller, by hand.
+is honest, measurable, and reachable. Supabase MCP is authenticated —
+fresh prod counts are in
+[Production re-read, 13 September 2026](#production-re-read-13-september-2026-supabase-auth).
+The market still has not started — zero lumber lots, zero seller leads,
+zero waitlist signups, zero `estimate_shown` since the 10 Sep fix. Do
+not add capability to fix a demand problem. Phase B is the work: one
+real seller, by hand.
 
 ---
 
@@ -323,7 +326,7 @@ does not have to rediscover it.
 | Cold mail | Not from this domain | `timberbid.app` only; Phase B, by hand. |
 | `request_human_contact` | Only if a person asked and left contact details | Records a follow-up. Not live chat. Not Woody. |
 | Real-time conversation with timber.bid | No | No socket, no human on the other end of the MCP, no shared inbox. |
-| Supabase / Stripe / Gmail / Drive MCPs in this environment | Not until authenticated | `needsAuth` on 7 Sep; Supabase still `needsAuth` on 13 Sep. |
+| Supabase MCP (`timber.bid` project `uuzqezohkqgsbbxyzvvv`) | **Yes, read** — authenticated 13 Sep | Fresh `site_events` / waitlist / listings re-read below. Stripe / Gmail / Drive still `needsAuth` unless re-checked. |
 
 To talk to a person at the company, use the founder’s existing channels
 (the Cursor thread, GitHub, the private repo). Do not invent a new one
@@ -357,10 +360,10 @@ Short version, so this file still decides:
 
 A pass over this repo at `main`, the live site, and the documents added
 since the 7 September review. No product was shipped in this pass. The
-constraint is still demand. Supabase MCP was unauthenticated in this
-session, so funnel counts below are **not** a fresh prod query — they
-rest on CLAUDE.md / the 6–10 September notes. Re-read `site_events`
-before treating any zero as new evidence.
+constraint is still demand. Supabase MCP was unauthenticated during the
+first write of this section; the same-day
+[production re-read](#production-re-read-13-september-2026-supabase-auth)
+supersedes any funnel zeros that rested only on the 6–10 September notes.
 
 ### What landed since 7 September
 
@@ -438,14 +441,69 @@ None of these reopen Phase C.
    words the homepage already uses.
 4. **After a lumber-route band, offer the open door** — one ghost
    button to `timber.bid/lumber/sell`; keep the waitlist for sealed lots.
-5. **Re-read `site_events` with auth** before deciding `/estimate`
-   deserves more traffic. Counts before 2026-09-10 do not join with
-   counts after for `estimate_shown`. Photo-funnel events
-   (`estimate_photo_added` / `_requested` / `_returned`) remaining at
-   zero still mean the drop is before the first photo.
+5. ~~**Re-read `site_events` with auth** before deciding `/estimate`
+   deserves more traffic.~~ **DONE 2026-09-13** — see
+   [Production re-read, 13 September 2026](#production-re-read-13-september-2026-supabase-auth).
+   Verdict: do **not** spend on driving more `/estimate` traffic yet;
+   since the 10 Sep fix, four estimate pageviews (one `sid`) produced
+   zero `estimate_shown` and zero photo-funnel events. The drop is
+   still before the first real input. Prefer the honesty fixes (2–4)
+   over acquisition.
 6. **Do not** add a chat widget, a Woody bot, an MCP-backed estimator
    on this site, a second waitlist writer, a leaderboard promotion, a
    precise price presented as a quote, or Resend receiving.
+
+---
+
+## Production re-read, 13 September 2026 (Supabase auth)
+
+Queried live against `uuzqezohkqgsbbxyzvvv` via the authenticated
+Supabase MCP. Founder/QA self-exclusion (`?nostats=1`) is invisible
+server-side — opted-out browsers never insert — so these counts are
+what reached the table, not “everyone who typed the URL.”
+
+### Funnel (`site_events`, `site = 'lumber.bid'`)
+
+| Measure | Count | Note |
+|---|---|---|
+| `pageview` all-time | 71 | First 2026-08-28; last this session day |
+| `pageview` since 2026-09-10 | 18 | After `estimate_shown` became recordable |
+| `pageview` `/` (+ `/index.html`) | 56 + 3 | Home still dominates |
+| `pageview` `/estimate` all-time | 11 | Was 6 on 6 Sep |
+| `pageview` `/estimate` since 2026-09-10 | 4 | All one `sid` (`fy60ocud…`) across 10–11 Sep |
+| `pageview` `/leaderboard` | 1 | Unchanged thin-surface visit |
+| `outbound_app_click` | 1 | Still the 5 Sep click; none since |
+| `estimate_shown` | **0** | CHECK + client whitelist confirmed open; series starts empty |
+| `estimate_photo_added` / `_requested` / `_returned` / `_rejected` / `_failed` / `_corrected` | **0** | Photo funnel never left the browser |
+| `waitlist_joined` | **0** | Beacon never fired |
+
+Server CHECK on `site_events.event` includes `estimate_shown` (and the
+full photo-funnel set). The zero is measurement, not a second silent
+drop.
+
+Referrers on pageviews: mostly null (65); `timber.bid` ×2; one each
+from baidu and a few scrapers. No organic mill / trade referrer.
+
+### Conversions outside the beacon
+
+| Table / filter | Count |
+|---|---|
+| `wood_delivery_waitlist` where `source = 'lumber.bid'` | 0 |
+| `slab_seller_leads` | 0 |
+| `listings` with lumber columns set (`species` / `estimated_board_feet` / `metal_risk`) | 0 |
+| `listings` overall | 6 firewood only (3 draft, 2 suspended, 1 active); `auction_mode='open'` — no sealed lumber lot has ever existed |
+
+### What this changes
+
+The 6 September decision rule finally has an input after 10 Sep, and
+the input says: **people (or one tab) open `/estimate` and do not type.**
+That matches the photo-first fold and the default-walnut lead card more
+than it matches “need more traffic.” Phase B (ask mills) and the three
+honesty fixes on `/estimate` stay ahead of any acquisition spend.
+
+Do not join `estimate_shown` counts across 2026-09-10. Before that date
+every zero was structural; after it, zero means no recorded manual
+input.
 
 ### What would delete the vertical
 
