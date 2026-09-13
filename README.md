@@ -67,9 +67,11 @@ rule never fires. Kept on purpose if the domain is ever re-aliased.
 
 ## Plan
 
-Phased plan, the 6 September production numbers, and the 7 September
-review of `/`, `/estimate`, and `mcp.timber.bid`: [`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md).
-The PDF next to it is the snapshot that opened Phase B.
+Phased plan, the 6 September production numbers, the 7 September review
+of `/`, `/estimate`, and `mcp.timber.bid`, and the 13 September
+extension (Phase A closed, `llms.txt` shipped, next actions):
+[`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md). The PDFs next to it are the
+6 Sep status snapshot and the 9 Sep business / oracle document.
 
 Agent MCP — where to call it, what to build for consumer vs builder
 agents, security, and lumber.bid focus: [`docs/MCP_AGENT_PLAN.md`](docs/MCP_AGENT_PLAN.md).
