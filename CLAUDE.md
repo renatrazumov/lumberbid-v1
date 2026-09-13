@@ -35,13 +35,15 @@ The full brief lives in the main repo and is the authority when this file and it
 disagree: `C:\Users\Renat\Dev\timberbid-v1\docs\LUMBERBID_REPO_BRIEF.md`.
 Read it before building anything here.
 
-The living plan for *this* repo — phases, the 6 September numbers, and the
-7 September review of `/`, `/estimate`, and `mcp.timber.bid` — is
-`docs/MASTER_PLAN.md`. The PDF next to it is the production snapshot that
-opened Phase B; extend the markdown. The business plan for agent MCP
-(where to call it, what to build, security, lumber.bid focus) is
-`docs/MCP_AGENT_PLAN.md`. That work belongs in timberbid-v1. This site
-does not grow an MCP client.
+The living plan for *this* repo — phases, the 6 September numbers, the
+7 September review of `/`, `/estimate`, and `mcp.timber.bid`, and the
+13 September extension (Phase A closed; next actions) — is
+`docs/MASTER_PLAN.md`. Extend the markdown. Beside it:
+`docs/lumber-bid-status-2026-09-06.pdf` (snapshot that opened Phase B)
+and `docs/everything-lumber-bid-2026-09-09.pdf` (business / oracle /
+price-chain). The business plan for agent MCP (where to call it, what to
+build, security, lumber.bid focus) is `docs/MCP_AGENT_PLAN.md`. That work
+belongs in timberbid-v1. This site does not grow an MCP client.
 
 ## Current state (2026-09-07)
 

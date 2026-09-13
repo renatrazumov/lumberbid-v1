@@ -1,14 +1,23 @@
 # lumber.bid master plan
 
-The living plan for this front door. The 6 September 2026 PDF
-(`docs/lumber-bid-status-2026-09-06.pdf`) is the production snapshot that
-opened Phase B. This file is the one to extend. When it disagrees with
-`timberbid-v1:docs/LUMBERBID_REPO_BRIEF.md`, the main-repo brief wins.
+The living plan for this front door. Extend this file; do not replace it
+with a parallel plan.
 
-The rails are finished. The market has not started. Do not add capability
-to fix a demand problem.
+| Document | Role |
+|---|---|
+| `docs/lumber-bid-status-2026-09-06.pdf` | Production snapshot that opened Phase B |
+| `docs/everything-lumber-bid-2026-09-09.pdf` | Business / oracle / price-chain master document (23 pp) |
+| This file | Phases, reviews, what to do next on **this** repo |
+| `docs/MCP_AGENT_PLAN.md` | Agent MCP — where to call, what to build, security |
 
-Agent MCP (consumer vs builder, where to call, security): `docs/MCP_AGENT_PLAN.md`.
+When this disagrees with `timberbid-v1:docs/LUMBERBID_REPO_BRIEF.md`,
+the main-repo brief wins.
+
+**Current posture (13 September 2026):** Phase A is finished. The site
+is honest, measurable, and reachable. The market still has not started —
+zero lumber lots, zero seller leads, zero waitlist signups from this
+domain. Do not add capability to fix a demand problem. Phase B is the
+work: one real seller, by hand.
 
 ---
 
@@ -16,15 +25,18 @@ Agent MCP (consumer vs builder, where to call, security): `docs/MCP_AGENT_PLAN.m
 
 ### Phase A — make the built thing reachable and measurable
 
-Done in product terms on 6 September 2026, with one measurement hole found
-on 7 September (see [Review, 7 September 2026](#review-7-september-2026)).
+**Closed 2026-09-10.** Product reachability landed 6 September; the last
+measurement hole (`estimate_shown`) closed four days later. See
+[Review, 7 September 2026](#review-7-september-2026) and
+[Review, 13 September 2026](#review-13-september-2026).
 
 | Change | Why | State |
 |---|---|---|
 | Homepage sell section leads with `/lumber/sell` | The working flow was unreachable from the front door | Shipped |
 | Headline is the appraisal, not the auction | Money path is “what is this log worth?” | Shipped 27 Aug |
 | Estimator capture step (email ask + confirm path) | Attach a lead to a log, or fall back to the waitlist | Already there |
-| `estimate_shown` on the manual calculator | The only unmeasured path; carries lumber-vs-firewood | **RECORDING since 2026-09-10** — was called-not-recorded; see finding 1 |
+| `estimate_shown` on the manual calculator | The only unmeasured path; carries lumber-vs-firewood | **CLOSED 2026-09-10** — recording for real; see finding 1 |
+| `site/llms.txt` for answer engines | Tell crawling models the honesty rule before they invent liquidity | Shipped 10 Sep |
 
 ### Phase B — get one seller, by hand
 
@@ -35,6 +47,13 @@ unused. Phase B is sending them: **seventeen mills, by hand, from
 `timberbid.app`** (the outreach domain — never lumber.bid), offering to
 list their wood from photographs they text over. The first listing does
 not have to be self-serve. It has to exist.
+
+The 9 September business document adds a sharper buyer-side twin of the
+same move: the purchaser names are already in
+`gov_timber_sale_results` — rank by spend, find the procurement
+forester, call from `timberbid.app`. Until one of them says yes or no,
+“buyer side” is a phrase, not a plan. That work lives in timberbid-v1 /
+founder channels, not in this static site.
 
 The platform has sent 28,263 cold emails and holds $67.08 of lifetime
 revenue. More volume is not the lever; a specific ask to a specific mill
@@ -304,7 +323,7 @@ does not have to rediscover it.
 | Cold mail | Not from this domain | `timberbid.app` only; Phase B, by hand. |
 | `request_human_contact` | Only if a person asked and left contact details | Records a follow-up. Not live chat. Not Woody. |
 | Real-time conversation with timber.bid | No | No socket, no human on the other end of the MCP, no shared inbox. |
-| Supabase / Stripe / Gmail / Drive MCPs in this environment | Not until authenticated | All four reported `needsAuth` on 7 Sep. |
+| Supabase / Stripe / Gmail / Drive MCPs in this environment | Not until authenticated | `needsAuth` on 7 Sep; Supabase still `needsAuth` on 13 Sep. |
 
 To talk to a person at the company, use the founder’s existing channels
 (the Cursor thread, GitHub, the private repo). Do not invent a new one
@@ -328,6 +347,111 @@ Short version, so this file still decides:
   contracts, invariants, event whitelist, front-door CTA; (3) treat
   `agent_audit_events` as the research feed. Lumber consumer tools wait
   on a reason that is not an empty homepage.
-- **lumber.bid focus is still Phase B.** Optional static `llms.txt` that
-  tells crawling models the truth. No chat widget, no second MCP, no
-  service-role, no auction back on the primary button.
+- **lumber.bid focus is still Phase B.** Static `llms.txt` shipped
+  2026-09-10 (tells crawling models the honesty rule). No chat widget,
+  no second MCP, no service-role, no auction back on the primary button.
+
+---
+
+## Review, 13 September 2026
+
+A pass over this repo at `main`, the live site, and the documents added
+since the 7 September review. No product was shipped in this pass. The
+constraint is still demand. Supabase MCP was unauthenticated in this
+session, so funnel counts below are **not** a fresh prod query — they
+rest on CLAUDE.md / the 6–10 September notes. Re-read `site_events`
+before treating any zero as new evidence.
+
+### What landed since 7 September
+
+| Change | Where | State |
+|---|---|---|
+| `estimate_shown` CHECK + whitelist + fixture | timberbid-v1 ledger `20260910175457`, then this repo | **Done 10 Sep** — Phase A closed |
+| `site/llms.txt` | This repo; allowed in `robots.txt`; live at `/llms.txt` | **Done 10 Sep** — answer engines get the honesty rule first |
+| Everything Lumber.bid (23 pp) | `docs/everything-lumber-bid-2026-09-09.pdf` | Business / oracle / price-chain canon beside this plan |
+
+Nothing else on the 7 September suggestion list has moved. The
+`/estimate` honesty gaps (lead card on the default walnut, photo-first
+fold, sealed-lot CTA to an empty board) are still live in
+`site/estimate.js` / `site/estimate.html` as of this review.
+
+### What “won” still looks like
+
+Unchanged from the 9 September business document, restated so this file
+decides:
+
+1. **One real listing from a stranger, with three photos.** (Not yet.)
+2. **One lot closed with competing bids.** That day the four demotions
+   lift together — open-lots strip, `/leaderboard` indexability +
+   sitemap, homepage record card, og record card.
+3. Everything after that (oracle SEO, named mill buy, cited closed-lot
+   series) is timberbid-v1 / market work, not a reason to reopen Phase C
+   on this front door early.
+
+### This repo vs timberbid-v1 — keep the split sharp
+
+The 9 September “next ninety days” list is mostly **not** this site:
+
+| Item | Belongs in |
+|---|---|
+| Put a cited statewide stumpage band on `/estimate` (one RPC) | timberbid-v1 first (`timber_price_band`); this site only after the contract is named both ways |
+| Ingest a delivered-price series (Oregon pond values…) | timberbid-v1 |
+| Publish `/prices` + CSV oracle | timberbid-v1 (or a later Astro surface here — not before Phase B has a seller) |
+| Run the purchaser list; ten calls from `timberbid.app` | Founder / Phase B — **the same cold-start work** |
+| Stale-source ingest alert | timberbid-v1 |
+| Watch one real person use `/estimate` on a phone | Founder; then small honesty fixes in this repo |
+
+Do not grow lumber.bid into an oracle product to decorate an empty
+market. The estimator may one day *cite* a public band; it must not
+pretend that citation is a buyer.
+
+### Live surface check (13 Sep)
+
+- **`/`** — still appraiser-led; `#sell` still leads with
+  `timber.bid/lumber/sell`; “No auction is open yet” still on the page;
+  lots strip still empty-by-design. Correct.
+- **`/estimate`** — still photo-first with a disabled CTA until a file
+  is chosen; form still defaults to black walnut 24″ × 12′ and
+  `revealLead()` still runs on load against that default; lumber-route
+  verdict still points sealed-bid energy at `timber.bid/lumber` (empty)
+  rather than the finishable sell walk. Same three honesty fixes as
+  7 September.
+- **`/llms.txt`** — live, honest, points assistants at `/estimate` and
+  `/lumber/sell`, forbids inventing buyers. Keep it tighter than the
+  marketing page, never looser.
+- **`sitemap.xml`** — still two URLs; `/estimate` `lastmod` still
+  2026-08-21 (cosmetic).
+- **`mcp.timber.bid`** — still v1.1.0, still tree/firewood instructions,
+  still no log estimate. Unchanged finding.
+
+### Ordered next actions (13 Sep)
+
+None of these reopen Phase C.
+
+1. **Do Phase B.** Seventeen mills (and/or the top purchasers in
+   `gov_timber_sale_results`), by hand, from `timberbid.app`. Watch
+   `slab_seller_leads` and `listings` — not pageviews.
+2. **Gate the estimate lead card on real input**, the same way
+   `estimate_shown` already does. `revealLead()` on load is still asking
+   for an email about the default walnut.
+3. **Say “or type the measurements” next to the photo CTA**, in the
+   words the homepage already uses.
+4. **After a lumber-route band, offer the open door** — one ghost
+   button to `timber.bid/lumber/sell`; keep the waitlist for sealed lots.
+5. **Re-read `site_events` with auth** before deciding `/estimate`
+   deserves more traffic. Counts before 2026-09-10 do not join with
+   counts after for `estimate_shown`. Photo-funnel events
+   (`estimate_photo_added` / `_requested` / `_returned`) remaining at
+   zero still mean the drop is before the first photo.
+6. **Do not** add a chat widget, a Woody bot, an MCP-backed estimator
+   on this site, a second waitlist writer, a leaderboard promotion, a
+   precise price presented as a quote, or Resend receiving.
+
+### What would delete the vertical
+
+Carried from the 9 September document so it stays visible: twelve more
+months of zero listings while the tree vertical is also starved. The
+oracle data in timberbid-v1 should survive regardless; the market layer
+on this domain is a bet that a stranger will list. The kill date is a
+founder call, not an agent one — but the plan refuses to pretend the bet
+is free.
