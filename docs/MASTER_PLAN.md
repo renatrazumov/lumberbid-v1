@@ -434,12 +434,12 @@ None of these reopen Phase C.
 1. **Do Phase B.** Seventeen mills (and/or the top purchasers in
    `gov_timber_sale_results`), by hand, from `timberbid.app`. Watch
    `slab_seller_leads` and `listings` — not pageviews.
-2. **Gate the estimate lead card on real input**, the same way
+2. **Gate the estimate lead card on real input** (implemented locally 15 Sep; see review below), the same way
    `estimate_shown` already does. `revealLead()` on load is still asking
    for an email about the default walnut.
-3. **Say “or type the measurements” next to the photo CTA**, in the
+3. **Say “or type the measurements” next to the photo CTA** (implemented locally 15 Sep), in the
    words the homepage already uses.
-4. **After a lumber-route band, offer the open door** — one ghost
+4. **After a lumber-route band, offer the open door** (implemented locally 15 Sep) — one ghost
    button to `timber.bid/lumber/sell`; keep the waitlist for sealed lots.
 5. ~~**Re-read `site_events` with auth** before deciding `/estimate`
    deserves more traffic.~~ **DONE 2026-09-13** — see
@@ -513,3 +513,21 @@ oracle data in timberbid-v1 should survive regardless; the market layer
 on this domain is a bet that a stranger will list. The kill date is a
 founder call, not an agent one — but the plan refuses to pretend the bet
 is free.
+
+## Review and local fixes, 15 September 2026
+
+Prepared on `codex/review-and-update`; these notes do not claim deployment.
+
+- The estimator lead card now waits for manual input or a successful photo
+  reading. Clearing either measurement hides it again. The default example
+  still renders without emitting `estimate_shown` or asking for an email.
+- A link beside the photo CTA explicitly offers manual measurements.
+- Lumber-route results link to `timber.bid/lumber/sell`, explicitly for
+  already-milled wood. Raw-log visitors retain the sealed-lot waitlist.
+- The homepage waitlist confirmation now sits outside the form that hides on
+  success. Previously, hiding the form also hid its success message.
+- Offline regression coverage exercises manual edits, measurement clearing,
+  photo success/rejection, and waitlist success/duplicate/error/retry states.
+  Shared backend payloads, valuation math and auction-status policy are unchanged.
+
+No production inserts, outreach or deployment were performed for this review.

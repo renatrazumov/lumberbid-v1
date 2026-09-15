@@ -62,6 +62,7 @@
 
   <button type="button" class="cta-big" id="est-photo-go" disabled>Get Log Estimate</button>
   <p class="cta-helper" id="est-photo-helper">Add at least one photo of the log</p>
+  <p class="cta-helper">Or <a href="#est-form">type the measurements &mdash; no photo needed</a>.</p>
   <p class="wl-status" id="est-photo-status" role="status"></p>
 
   <!-- The confirm form: the AI fills it, the seller corrects it, the band
@@ -136,7 +137,7 @@
 
   <div id="est-result" class="card" hidden aria-live="polite"></div>
 
-  <!-- Appears once a band has rendered. The ask is deliberately the WAITLIST
+  <!-- Appears after real input produces a result, never for the default. The ask is deliberately the WAITLIST
        ask, not a buyer promise: no auction is open and there is no buyer pool
        yet, and the honesty rule (docs/lumber.md) binds every word on this site.
        Writes role 'interested' / source 'lumber.bid' — the same row waitlist.js
