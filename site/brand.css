@@ -98,6 +98,7 @@ a.cta {
   padding: .8rem 1.4rem; border-radius: 8px;
 }
 a.cta:hover { filter: brightness(1.08); }
+a.cta.ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); }
 
 /* Trust list — icon-bullet rows like "What vetted means here". */
 .trust { list-style: none; margin: 0; padding: 0; }

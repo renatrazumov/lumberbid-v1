@@ -19,6 +19,11 @@
   if (!form || !M) return;
 
   var out = document.getElementById('est-result');
+  var hasEstimateInput = false;
+  function updateLead() {
+    var lead = document.getElementById('est-lead');
+    if (lead) lead.hidden = !hasEstimateInput || out.hidden;
+  }
   var usd = function (n) { return '$' + Math.max(0, n).toLocaleString('en-US'); };
 
   var GRADE_LABEL = {
@@ -45,7 +50,7 @@
 
   function render() {
     var input = read();
-    if (input.smallEndDiameterIn <= 0 || input.lengthFt <= 0) { out.hidden = true; return; }
+    if (input.smallEndDiameterIn <= 0 || input.lengthFt <= 0) { out.hidden = true; updateLead(); return; }
     var v = M.valueLog(input);
 
     var rows = [];
@@ -57,7 +62,8 @@
       rows.push('<div class="est-row"><span>Gross value band</span><strong>' + usd(v.grossValueBand.low) + ' – ' + usd(v.grossValueBand.high) + '</strong></div>');
       rows.push('<div class="est-row"><span>Est. extraction cost</span><strong>−' + usd(v.extractionCost) + '</strong></div>');
       rows.push('<div class="est-row est-net"><span>Net value band</span><strong>' + usd(v.netValueBand.low) + ' – ' + usd(v.netValueBand.high) + '</strong></div>');
-      rows.push('<p class="est-verdict ok">Worth selling as a log — this is what a sealed bid is for.</p>');
+      rows.push('<p class="est-verdict ok">Worth checking with a local mill or buyer. Join the waitlist below for future sealed lots.</p>');
+      rows.push('<p>Already have milled wood? <a class="cta ghost" href="https://timber.bid/lumber/sell">List a slab, piece or lumber lot &rarr;</a></p>');
     } else {
       rows.push('<p class="est-verdict">This one is firewood, not lumber — milling it would not beat the ~$60/log firewood alternative. That is a fine outcome; most logs are firewood.</p>');
     }
@@ -70,6 +76,7 @@
 
     out.innerHTML = rows.join('');
     out.hidden = false;
+    updateLead();
   }
 
   // Did the visitor actually drive the calculator, and what did it tell them?
@@ -88,7 +95,7 @@
     } catch (e) { /* a lost beacon is a lost beacon */ }
   }
 
-  form.addEventListener('input', function () { render(); trackManualEstimate(); });
+  form.addEventListener('input', function () { hasEstimateInput = true; render(); trackManualEstimate(); });
   form.addEventListener('submit', function (ev) { ev.preventDefault(); render(); });
   render(); // walnut default renders immediately — the flagship case on load
 
@@ -179,6 +186,7 @@
   }
 
   function applyFacts(f) {
+    hasEstimateInput = true;
     // Species: select the matching option, else 'other' (log-model routes
     // unknown species to the conservative utility tier).
     var sel = document.getElementById('est-species');
@@ -335,12 +343,8 @@
   var leadStatus = document.getElementById('est-lead-status');
 
   if (leadBox && leadForm) {
-    // The result card is the trigger: if a band is on screen, so is the ask.
-    var revealLead = function () {
-      if (!out.hidden) leadBox.hidden = false;
-    };
-    form.addEventListener('input', revealLead);
-    revealLead();
+    // render() reveals the ask only after manual input or a successful photo
+    // reading, and hides it again when the measurements are cleared.
 
     leadForm.addEventListener('submit', function (ev) {
       ev.preventDefault();
